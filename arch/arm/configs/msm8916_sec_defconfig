@@ -710,6 +710,9 @@ CONFIG_CRYPTO_AES_ARM=y
 
 CONFIG_SECCOMP=y
 
+#Touch Disabler
+CONFIG_TOUCH_DISABLER=y
+
 #
 # Qualcomm Atheros Prima WLAN module
 #

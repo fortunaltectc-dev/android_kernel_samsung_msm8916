@@ -34,6 +34,10 @@
 #include <linux/of.h>
 #include <linux/of_gpio.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 /*
  * Coordinate calculation:
  * X1 = X1_LSB + X1_MSB*256
@@ -576,6 +580,10 @@ static int auo_pixcir_probe(struct i2c_client *client,
 
 	snprintf(ts->phys, sizeof(ts->phys),
 		 "%s/input0", dev_name(&client->dev));
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 
 	input_dev->name = "AUO-Pixcir touchscreen";
 	input_dev->phys = ts->phys;

@@ -35,6 +35,10 @@
 #include <linux/input/eeti_ts.h>
 #include <linux/slab.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 static bool flip_x;
 module_param(flip_x, bool, 0644);
 MODULE_PARM_DESC(flip_x, "flip x coordinate");
@@ -190,6 +194,10 @@ static int eeti_ts_probe(struct i2c_client *client,
 	input_set_abs_params(input, ABS_X, 0, EETI_MAXVAL, 0, 0);
 	input_set_abs_params(input, ABS_Y, 0, EETI_MAXVAL, 0, 0);
 	input_set_abs_params(input, ABS_PRESSURE, 0, 0xff, 0, 0);
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input;
+#endif
 
 	input->name = client->name;
 	input->id.bustype = BUS_I2C;

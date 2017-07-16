@@ -15,6 +15,10 @@
 
 #include <linux/synaptics_s7301.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 #define REPORT_MT_NOZ(x, y, w_max, w_min) \
 do {     \
 	input_report_abs(data->input, ABS_MT_POSITION_X, x);	\
@@ -1335,6 +1339,10 @@ static int  synaptics_ts_probe(struct i2c_client *client,
 		ret = -ENOMEM;
 		goto err_pdata;
 	}
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input;
+#endif
 
 	ddata->input = input;
 	input_set_drvdata(input, ddata);

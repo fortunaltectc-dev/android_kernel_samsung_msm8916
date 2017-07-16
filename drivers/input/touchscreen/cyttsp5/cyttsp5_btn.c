@@ -21,6 +21,10 @@
  *
  */
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 #include "cyttsp5_regs.h"
 int tsp_keycodes[2] = {
 	KEY_MENU,
@@ -305,6 +309,10 @@ int cyttsp5_btn_probe(struct device *dev)
 		rc = -ENOSYS;
 		goto error_alloc_failed;
 	}
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = bd->input;
+#endif
 
 	if (bd->pdata->inp_dev_name)
 		bd->input->name = bd->pdata->inp_dev_name;

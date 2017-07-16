@@ -36,6 +36,10 @@
 #include <linux/module.h>
 #include "ad7879.h"
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 #define AD7879_REG_ZEROS		0
 #define AD7879_REG_CTRL1		1
 #define AD7879_REG_CTRL2		2
@@ -538,6 +542,10 @@ struct ad7879 *ad7879_probe(struct device *dev, u8 devid, unsigned int irq,
 	ts->median = pdata->median;
 
 	snprintf(ts->phys, sizeof(ts->phys), "%s/input0", dev_name(dev));
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 
 	input_dev->name = "AD7879 Touchscreen";
 	input_dev->phys = ts->phys;

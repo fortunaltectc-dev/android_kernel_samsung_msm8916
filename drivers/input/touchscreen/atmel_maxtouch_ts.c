@@ -52,6 +52,10 @@
 #include <linux/clk.h>
 #endif
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 /* Configuration file */
 #define MXT_CFG_MAGIC		"OBP_RAW V1"
 
@@ -2865,6 +2869,10 @@ static int mxt_create_input_dev(struct mxt_data *data)
 		dev_err(dev, "Failed to allocate memory\n");
 		return -ENOMEM;
 	}
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 
 	input_dev->name = "Atmel maXTouch Touchscreen";
 	input_dev->phys = data->phys;

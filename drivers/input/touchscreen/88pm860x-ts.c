@@ -17,6 +17,10 @@
 #include <linux/mfd/88pm860x.h>
 #include <linux/slab.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 #define MEAS_LEN		(8)
 #define ACCURATE_BIT		(12)
 
@@ -245,6 +249,10 @@ static int pm860x_touch_probe(struct platform_device *pdev)
 		ret = -ENOMEM;
 		goto out;
 	}
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = touch->idev;
+#endif
 
 	touch->idev->name = "88pm860x-touch";
 	touch->idev->phys = "88pm860x/input0";

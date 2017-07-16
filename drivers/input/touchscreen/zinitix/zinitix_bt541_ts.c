@@ -49,6 +49,10 @@
 
 #include "zinitix_bt541_ts.h"
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 #if (TSP_TYPE_COUNT == 1)
 u8 *m_pFirmware [TSP_TYPE_COUNT] = {(u8*)m_firmware_data,};
 #else
@@ -4860,6 +4864,10 @@ static int bt541_ts_probe(struct i2c_client *client,
 		0, 255, 0, 0);
 	input_set_abs_params(info->input_dev, ABS_MT_PALM,
 		0, 1, 0, 0);
+#endif
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = info->input_dev;
 #endif
 
 	info->input_dev->open = bt541_input_open;

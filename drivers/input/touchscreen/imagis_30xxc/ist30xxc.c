@@ -47,6 +47,10 @@
 #include "ist30xxc_cmcs_jit.h"
 #endif
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 #ifdef CONFIG_DUAL_TOUCH_IC_CHECK
 static int probe_finished = 0;
 #endif
@@ -1602,6 +1606,10 @@ static int ist30xx_probe(struct i2c_client *client,
 	i2c_set_clientdata(client, data);
 
 	input_mt_init_slots(input_dev, IST30XX_MAX_MT_FINGERS, 0);
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 
 	input_dev->name = "sec_touchscreen";
 	input_dev->id.bustype = BUS_I2C;

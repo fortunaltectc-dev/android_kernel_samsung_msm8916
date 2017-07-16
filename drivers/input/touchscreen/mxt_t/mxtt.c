@@ -40,6 +40,10 @@
 #include <asm/bug.h>
 #endif
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 #define USE_T100_MULTI_SLOT
 extern unsigned int system_rev;
 static int mxt_read_mem(struct mxt_data *data, u16 reg, u16 len, void *buf)
@@ -2998,6 +3002,10 @@ static int  mxt_probe(struct i2c_client *client,
 			printk("TSP error in pinctrl configuration\n");
 			//tsp_debug_info(true, &ddata->client->dev,"%s: cannot set pinctrl state\n", __func__);
 	}
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 
 	input_dev->open = mxt_input_open;
 	input_dev->close = mxt_input_close;

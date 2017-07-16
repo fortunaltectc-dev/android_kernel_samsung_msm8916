@@ -35,6 +35,10 @@
 #include <linux/regulator/consumer.h>
 #include <linux/qpnp/pin.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 static int mxt_power_onoff(struct mxt_data *data, bool enabled);
 
 #if ENABLE_TOUCH_KEY
@@ -2807,6 +2811,11 @@ static int  mxt_probe(struct i2c_client *client,
 #if defined(USE_OPEN_CLOSE)
 	input_dev->open = mxt_input_open;
 	input_dev->close = mxt_input_close;
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
+
 #endif
 	data->input_dev = input_dev;
 	data->pdata = pdata;

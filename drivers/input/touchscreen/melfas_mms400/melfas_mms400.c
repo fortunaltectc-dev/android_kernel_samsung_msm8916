@@ -7,6 +7,10 @@
 
 #include "melfas_mms400.h"
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 #if MMS_USE_NAP_MODE
 struct wake_lock mms_wake_lock;
 #endif
@@ -946,6 +950,11 @@ static int mms_probe(struct i2c_client *client, const struct i2c_device_id *id)
 #if MMS_USE_INPUT_OPEN_CLOSE
 	input_dev->open = mms_input_open;
 	input_dev->close = mms_input_close;
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
+
 #endif
 
 	input_set_events_per_packet(input_dev, 200);

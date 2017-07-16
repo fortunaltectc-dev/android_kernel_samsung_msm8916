@@ -20,6 +20,9 @@
 #include <linux/muic/muic.h>
 #include <linux/muic/muic_notifier.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
 
 u32 BUTTON_MAPPING_KEY[MAX_SUPPORTED_BUTTON_NUM] = {KEY_RECENT, KEY_BACK};
 
@@ -5222,6 +5225,10 @@ static int zt7548_ts_probe(struct i2c_client *client, const struct i2c_device_id
 
 	set_bit(MT_TOOL_FINGER, info->input_dev->keybit);
 	input_mt_init_slots(info->input_dev, info->cap_info.multi_fingers, 0);
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = info->input_dev;
+#endif
 
 	info->input_dev->open = zt7548_input_open;
 	info->input_dev->close = zt7548_input_close;

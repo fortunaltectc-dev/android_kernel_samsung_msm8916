@@ -20,6 +20,10 @@
 #include <linux/slab.h>
 #include <linux/init.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 #define MC13783_TS_NAME	"mc13783-ts"
 
 #define DEFAULT_SAMPLE_TOLERANCE 300
@@ -196,6 +200,10 @@ static int __init mc13783_ts_probe(struct platform_device *pdev)
 	priv->workq = create_singlethread_workqueue("mc13783_ts");
 	if (!priv->workq)
 		goto err_free_mem;
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = idev;
+#endif
 
 	idev->name = MC13783_TS_NAME;
 	idev->dev.parent = &pdev->dev;

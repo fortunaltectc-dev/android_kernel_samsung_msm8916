@@ -32,6 +32,10 @@
 
 #include "sec_ts.h"
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 #ifdef CONFIG_OF
 #ifndef USE_OPEN_CLOSE
 #define USE_OPEN_CLOSE
@@ -1751,6 +1755,11 @@ static int sec_ts_probe(struct i2c_client *client, const struct i2c_device_id *i
 #ifdef USE_OPEN_CLOSE
 	ts->input_dev->open = sec_ts_input_open;
 	ts->input_dev->close = sec_ts_input_close;
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = ts->input_dev;
+#endif
+
 #endif
 
 #ifdef CONFIG_TOUCHSCREN_SEC_TS_GLOVEMODE

@@ -28,6 +28,10 @@
 
 #include <mach/tnetv107x.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 #define TSC_PENUP_POLL		(HZ / 5)
 #define IDLE_TIMEOUT		100 /* msec */
 
@@ -311,6 +315,10 @@ static int tsc_probe(struct platform_device *pdev)
 		goto error_input;
 	}
 	input_set_drvdata(ts->input_dev, ts);
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = ts->input_dev;
+#endif
 
 	ts->input_dev->name       = pdev->name;
 	ts->input_dev->id.bustype = BUS_HOST;

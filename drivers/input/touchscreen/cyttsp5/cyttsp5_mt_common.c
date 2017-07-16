@@ -24,6 +24,10 @@
 #include "cyttsp5_regs.h"
 #include <linux/input/mt.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 #define CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP5_MT_B
 #define CYTTSP5_TOUCHLOG_ENABLE 0
 
@@ -1131,6 +1135,10 @@ int cyttsp5_mt_probe(struct device *dev)
 		rc = -ENOSYS;
 		goto error_alloc_failed;
 	}
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = md->input;
+#endif
 
 	if (md->pdata->inp_dev_name)
 		md->input->name = md->pdata->inp_dev_name;

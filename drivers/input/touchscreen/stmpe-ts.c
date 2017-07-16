@@ -27,6 +27,10 @@
 
 #include <linux/mfd/stmpe.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 /* Register layouts and functionalities are identical on all stmpexxx variants
  * with touchscreen controller
  */
@@ -348,6 +352,10 @@ static int stmpe_input_probe(struct platform_device *pdev)
 	error = stmpe_init_hw(ts);
 	if (error)
 		return error;
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = idev;
+#endif
 
 	idev->name = STMPE_TS_NAME;
 	idev->phys = STMPE_TS_NAME"/input0";

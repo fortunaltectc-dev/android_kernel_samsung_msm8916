@@ -20,6 +20,10 @@
 #include <linux/mfd/da9052/reg.h>
 #include <linux/mfd/da9052/da9052.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 #define TSI_PEN_DOWN_STATUS 0x40
 
 struct da9052_tsi {
@@ -249,6 +253,10 @@ static int da9052_ts_probe(struct platform_device *pdev)
 	tsi->dev = input_dev;
 	tsi->stopped = true;
 	INIT_DELAYED_WORK(&tsi->ts_pen_work, da9052_ts_pen_work);
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 
 	input_dev->id.version = 0x0101;
 	input_dev->id.vendor = 0x15B6;

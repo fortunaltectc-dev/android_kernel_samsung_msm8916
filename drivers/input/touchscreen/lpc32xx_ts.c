@@ -24,6 +24,10 @@
 #include <linux/slab.h>
 #include <linux/of.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 /*
  * Touchscreen controller register offsets
  */
@@ -256,6 +260,10 @@ static int lpc32xx_ts_probe(struct platform_device *pdev)
 		error = PTR_ERR(tsc->clk);
 		goto err_unmap;
 	}
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input;
+#endif
 
 	input->name = MOD_NAME;
 	input->phys = "lpc32xx/input0";

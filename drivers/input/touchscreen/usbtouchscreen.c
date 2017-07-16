@@ -56,6 +56,9 @@
 #include <linux/usb/input.h>
 #include <linux/hid.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
 
 #define DRIVER_VERSION		"v0.6"
 #define DRIVER_AUTHOR		"Daniel Ritz <daniel.ritz@gmx.ch>"
@@ -1625,6 +1628,10 @@ static int usbtouch_probe(struct usb_interface *intf,
 	input_dev->dev.parent = &intf->dev;
 
 	input_set_drvdata(input_dev, usbtouch);
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 
 	input_dev->open = usbtouch_open;
 	input_dev->close = usbtouch_close;

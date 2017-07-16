@@ -36,6 +36,10 @@
 
 #include "cyttsp_core.h"
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 /* Bootloader number of command keys */
 #define CY_NUM_BL_KEYS		8
 
@@ -566,6 +570,10 @@ struct cyttsp *cyttsp_probe(const struct cyttsp_bus_ops *bus_ops,
 			goto err_free_mem;
 		}
 	}
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 
 	input_dev->name = pdata->name;
 	input_dev->phys = ts->phys;

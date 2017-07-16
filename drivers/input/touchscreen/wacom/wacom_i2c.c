@@ -34,6 +34,10 @@
 #endif
 #include <linux/of_gpio.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 bool ums_binary;
 unsigned char screen_rotate;
 unsigned char user_hand = 1;
@@ -317,6 +321,9 @@ static void wacom_i2c_set_input_values(struct i2c_client *client,
 				       struct input_dev *input_dev)
 {
 	/*Set input values before registering input device */
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 
 	input_dev->name = "sec_e-pen";
 	input_dev->id.bustype = BUS_I2C;

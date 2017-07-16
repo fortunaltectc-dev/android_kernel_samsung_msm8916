@@ -20,6 +20,10 @@
 #include <linux/gpio.h>
 #include <asm/unaligned.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 #define WACOM_CMD_QUERY0	0x04
 #define WACOM_CMD_QUERY1	0x00
 #define WACOM_CMD_QUERY2	0x33
@@ -170,6 +174,10 @@ static int wacom_i2c_probe(struct i2c_client *client,
 
 	wac_i2c->client = client;
 	wac_i2c->input = input;
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input;
+#endif
 
 	input->name = "Wacom I2C Digitizer";
 	input->id.bustype = BUS_I2C;

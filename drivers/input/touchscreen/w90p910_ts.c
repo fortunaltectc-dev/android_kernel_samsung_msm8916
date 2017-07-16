@@ -18,6 +18,10 @@
 #include <linux/interrupt.h>
 #include <linux/slab.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 /* ADC controller bit defines */
 #define ADC_DELAY	0xf00
 #define ADC_DOWN	0x01
@@ -258,6 +262,10 @@ static int w90x900ts_probe(struct platform_device *pdev)
 		err = PTR_ERR(w90p910_ts->clk);
 		goto fail3;
 	}
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 
 	input_dev->name = "W90P910 TouchScreen";
 	input_dev->phys = "w90p910ts/event0";

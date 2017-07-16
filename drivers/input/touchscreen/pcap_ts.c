@@ -22,6 +22,10 @@
 #include <linux/input.h>
 #include <linux/mfd/ezx-pcap.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 struct pcap_ts {
 	struct pcap_chip *pcap;
 	struct input_dev *input;
@@ -162,6 +166,10 @@ static int pcap_ts_probe(struct platform_device *pdev)
 
 	pcap_ts->input = input_dev;
 	input_set_drvdata(input_dev, pcap_ts);
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 
 	input_dev->name = "pcap-touchscreen";
 	input_dev->phys = "pcap_ts/input0";

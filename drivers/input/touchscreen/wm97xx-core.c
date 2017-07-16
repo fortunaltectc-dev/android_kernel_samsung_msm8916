@@ -50,6 +50,10 @@
 #include <linux/io.h>
 #include <linux/slab.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 #define TS_NAME			"wm97xx"
 #define WM_CORE_VERSION		"1.00"
 #define DEFAULT_PRESSURE	0xb0c0
@@ -651,6 +655,9 @@ static int wm97xx_probe(struct device *dev)
 	}
 
 	/* set up touch configuration */
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = wm->input_dev;
+#endif
 	wm->input_dev->name = "wm97xx touchscreen";
 	wm->input_dev->phys = "wm97xx";
 	wm->input_dev->open = wm97xx_ts_input_open;

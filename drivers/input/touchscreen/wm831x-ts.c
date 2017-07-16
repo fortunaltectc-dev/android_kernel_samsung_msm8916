@@ -26,6 +26,10 @@
 #include <linux/slab.h>
 #include <linux/types.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 /*
  * R16424 (0x4028) - Touch Control 1
  */
@@ -347,6 +351,9 @@ static int wm831x_ts_probe(struct platform_device *pdev)
 	}
 
 	/* set up touch configuration */
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 	input_dev->name = "WM831x touchscreen";
 	input_dev->phys = "wm831x";
 	input_dev->open = wm831x_ts_input_open;

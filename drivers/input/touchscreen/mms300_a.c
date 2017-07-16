@@ -59,6 +59,10 @@
 
 #include <asm/unaligned.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 #define MMS300_DOWNLOAD
 #define MMS300_RESET_DELAY	70
 
@@ -5758,6 +5762,11 @@ static int mms_ts_probe(struct i2c_client *client,
 #ifdef USE_OPEN_CLOSE
 	input_dev->open = mms_ts_input_open;
 	input_dev->close = mms_ts_input_close;
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
+
 #endif
 	input_set_drvdata(input_dev, info);
 

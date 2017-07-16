@@ -29,6 +29,10 @@
 #include <linux/i2c.h>
 #include <linux/timer.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 #define EVENT_PENDOWN 1
 #define EVENT_REPEAT  2
 #define EVENT_PENUP   3
@@ -151,6 +155,10 @@ static int migor_ts_probe(struct i2c_client *client,
 	input->evbit[0] = BIT_MASK(EV_KEY) | BIT_MASK(EV_ABS);
 
 	__set_bit(BTN_TOUCH, input->keybit);
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input;
+#endif
 
 	input_set_abs_params(input, ABS_X, 95, 955, 0, 0);
 	input_set_abs_params(input, ABS_Y, 85, 935, 0, 0);

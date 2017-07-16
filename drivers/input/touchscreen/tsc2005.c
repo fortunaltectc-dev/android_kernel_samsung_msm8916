@@ -31,6 +31,10 @@
 #include <linux/spi/spi.h>
 #include <linux/spi/tsc2005.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 /*
  * The touchscreen interface operates as follows:
  *
@@ -629,6 +633,10 @@ static int tsc2005_probe(struct spi_device *spi)
 
 	snprintf(ts->phys, sizeof(ts->phys),
 		 "%s/input-ts", dev_name(&spi->dev));
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 
 	input_dev->name = "TSC2005 touchscreen";
 	input_dev->phys = ts->phys;

@@ -46,6 +46,10 @@
 #include <linux/atomic.h>
 #endif
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 /* Family ID */
 #define MXT224_ID	0x80
 #define MXT224E_ID	0x81
@@ -3502,6 +3506,10 @@ static int mxt_probe(struct i2c_client *client,
 		error = -ENOMEM;
 		goto err_free_mem;
 	}
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 
 	data->state = INIT;
 	input_dev->name = "atmel_mxt_ts";

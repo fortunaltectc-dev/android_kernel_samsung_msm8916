@@ -21,6 +21,10 @@
 #include <linux/mfd/da903x.h>
 #include <linux/slab.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 #define DA9034_MANUAL_CTRL	0x50
 #define DA9034_LDO_ADC_EN	(1 << 4)
 
@@ -329,6 +333,10 @@ static int da9034_touch_probe(struct platform_device *pdev)
 		ret = -ENOMEM;
 		goto err_free_touch;
 	}
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 
 	input_dev->name		= pdev->name;
 	input_dev->open		= da9034_touch_open;

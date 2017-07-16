@@ -28,6 +28,10 @@
 #include <linux/interrupt.h>
 #include <linux/ucb1400.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 #define UCB1400_TS_POLL_PERIOD	10 /* ms */
 
 static bool adcsync;
@@ -343,6 +347,10 @@ static int ucb1400_ts_probe(struct platform_device *pdev)
 	init_waitqueue_head(&ucb->ts_wait);
 
 	input_set_drvdata(ucb->ts_idev, ucb);
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = ucb->ts_idev;
+#endif
 
 	ucb->ts_idev->dev.parent	= &pdev->dev;
 	ucb->ts_idev->name		= "UCB1400 touchscreen interface";

@@ -66,6 +66,9 @@
 #endif
 #endif
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
 
 #define NOT_SUPPORTED_TOUCH_DUMMY_KEY
 #define SUPPORTED_PALM_TOUCH
@@ -5986,6 +5989,10 @@ static int bt532_ts_probe(struct i2c_client *client,
 		-90, 90, 0, 0);*/
 	input_set_abs_params(info->input_dev, ABS_MT_PALM,
 		0, 1, 0, 0);
+#endif
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = info->input_dev;
 #endif
 
 	info->input_dev->open = bt532_input_open;

@@ -14,13 +14,12 @@
 #ifndef INPUT_DISABLER_H
 #define INPUT_DISABLER_H
 
-struct input_disabler_tp {
-	struct input_dev *dev;
-	int (*input_open)(struct input_dev *);
-	int (*input_close)(struct input_dev *);
-}
+typedef struct {
+	struct input_dev *tp_dev;
+	struct input_dev *tk_dev;
+} input_disabler_data_t;
 
-struct input_disabler_tp input_disabler_tp_data;
+input_disabler_data_t input_disabler_data;
 
 void inputdisabler_set_touch(bool status);
 

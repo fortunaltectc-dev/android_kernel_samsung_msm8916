@@ -28,22 +28,35 @@
 void inputdisabler_set_touch(bool status)
 {
 	/* check if the struct has been initialised by the touch driver */
-	if (input_disabler_tp_data.dev) {
+	if (input_disabler_data.tp_dev) {
 		if (status) {
 			pr_info("%s: Enabling touch panel...\n", __func__);
-			input_disabler_tp_data.input_open(input_disabler_tp_data.dev);
+			input_disabler_data.tp_dev->open(input_disabler_data.tp_dev);
 		} else {
 			pr_info("%s: Disabling touch panel...\n", __func__);
-			input_disabler_tp_data.input_close(input_disabler_tp_data.dev);
+			input_disabler_data.tp_dev->close(input_disabler_data.tp_dev);
 		}
 	} else {
 		pr_error("%s: Touch panel data struct is uninitialised!\n", __func__);
+	}
+
+	if (input_disabler_data.tk_dev) {
+		if (status) {
+			pr_info("%s: Enabling touch keys...\n", __func__);
+			input_disabler_data.tk_dev->open(input_disabler_data.tk_dev);
+		} else {
+			pr_info("%s: Disabling touch keys...\n", __func__);
+			input_disabler_data.tk_dev->close(input_disabler_data.tk_dev);
+		}
+	} else {
+		pr_error("%s: Touch key data struct is uninitialised!\n", __func__);
 	}
 }
 
 static int __init input_disabler_init(void)
 {
-	input_disabler_tp_data.dev = NULL;
+	input_disabler_data.tp_dev = NULL;
+	input_disabler_data.tk_dev = NULL;
 	return 0;
 }
 

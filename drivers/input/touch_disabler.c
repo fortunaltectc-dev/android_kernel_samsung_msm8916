@@ -16,7 +16,7 @@
 #include <linux/of.h>
 #include <linux/slab.h>
 
-#include <linux/input/input_disabler.h>
+#include <linux/input/touch_disabler.h>
 
 /*
  * Touch key/panel enabler/disabler for samsung touch keys/panel drivers.
@@ -25,42 +25,42 @@
  * When panel blank or unblank, touch devices will enabled or disabled.
  *
  */
-void input_disabler_set_touch(bool status)
+void touch_disabler_set_touch(bool status)
 {
 	/* check if the struct has been initialised by the touch driver */
-	if (input_disabler_data.tp_dev) {
+	if (touch_disabler_data.tp_dev) {
 		if (status) {
 			pr_info("%s: Enabling touch panel...\n", __func__);
-			input_disabler_data.tp_dev->open(input_disabler_data.tp_dev);
+			touch_disabler_data.tp_dev->open(touch_disabler_data.tp_dev);
 		} else {
 			pr_info("%s: Disabling touch panel...\n", __func__);
-			input_disabler_data.tp_dev->close(input_disabler_data.tp_dev);
+			touch_disabler_data.tp_dev->close(touch_disabler_data.tp_dev);
 		}
 	} else {
 		pr_error("%s: Touch panel data struct is uninitialised!\n", __func__);
 	}
 
-	if (input_disabler_data.tk_dev) {
+	if (touch_disabler_data.tk_dev) {
 		if (status) {
 			pr_info("%s: Enabling touch keys...\n", __func__);
-			input_disabler_data.tk_dev->open(input_disabler_data.tk_dev);
+			touch_disabler_data.tk_dev->open(touch_disabler_data.tk_dev);
 		} else {
 			pr_info("%s: Disabling touch keys...\n", __func__);
-			input_disabler_data.tk_dev->close(input_disabler_data.tk_dev);
+			touch_disabler_data.tk_dev->close(touch_disabler_data.tk_dev);
 		}
 	} else {
 		pr_error("%s: Touch key data struct is uninitialised!\n", __func__);
 	}
 }
 
-static int __init input_disabler_init(void)
+static int __init touch_disabler_init(void)
 {
-	input_disabler_data.tp_dev = NULL;
-	input_disabler_data.tk_dev = NULL;
+	touch_disabler_data.tp_dev = NULL;
+	touch_disabler_data.tk_dev = NULL;
 	return 0;
 }
 
-module_init(input_disabler_init);
+module_init(touch_disabler_init);
 
 MODULE_DESCRIPTION("Touch key/panel disabler for Samsung devices");
 MODULE_LICENSE("GPL");

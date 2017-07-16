@@ -213,8 +213,8 @@ config INPUT_BOOSTER
 	help
 	  Say Y here if you want to boost when some keys and touches are pressed. If unsure, say N.
 
-config INPUT_DISABLER
-	bool "input disabler"
+config TOUCH_DISABLER
+	bool "touch disabler"
 	depends on INPUT
 	default n
 	help

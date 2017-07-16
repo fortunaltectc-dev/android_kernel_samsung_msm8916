@@ -30,8 +30,8 @@
 /*#define PANEL_CMD_DEBUG*/
 #endif
 
-#if defined(CONFIG_INPUT_DISABLER)
-#include <linux/input/input_disabler.h>
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
 #endif
 
 #define DT_CMD_HDR 6
@@ -808,8 +808,8 @@ static int mdss_dsi_post_panel_on(struct mdss_panel_data *pdata)
 
 end:
 	pr_debug("%s:-\n", __func__);
-#if defined(CONFIG_INPUT_DISABLER)
-	input_disabler_set_touch(true);
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_set_touch(true);
 #endif
 	return 0;
 }
@@ -859,8 +859,8 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 end:
 	pinfo->blank_state = MDSS_PANEL_BLANK_BLANK;
 	pr_debug("%s:-\n", __func__);
-#if defined(CONFIG_INPUT_DISABLER)
-	input_disabler_set_touch(false);
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_set_touch(false);
 #endif
 	return 0;
 }

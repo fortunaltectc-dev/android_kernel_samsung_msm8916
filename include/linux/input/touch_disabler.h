@@ -11,16 +11,16 @@
  * GNU General Public License for more details.
  */
 
-#ifndef INPUT_DISABLER_H
-#define INPUT_DISABLER_H
+#ifndef TOUCH_DISABLER_H
+#define TOUCH_DISABLER_H
 
 typedef struct {
 	struct input_dev *tp_dev;
 	struct input_dev *tk_dev;
-} input_disabler_data_t;
+} touch_disabler_data_t;
 
-input_disabler_data_t input_disabler_data;
+touch_disabler_data_t touch_disabler_data;
 
-void input_disabler_set_touch(bool status);
+void touch_disabler_set_touch(bool status);
 
-#endif
+#endif /* TOUCH_DISABLER_T */

@@ -28,13 +28,13 @@
 void touch_disabler_set_touch(bool status)
 {
 	/* check if the struct has been initialised by the touch driver */
-	if (touch_disabler_data.tp_dev) {
+	if (touch_disabler_data.ts_dev) {
 		if (status) {
 			pr_info("%s: Enabling touch panel...\n", __func__);
-			touch_disabler_data.tp_dev->open(touch_disabler_data.tp_dev);
+			touch_disabler_data.ts_dev->open(touch_disabler_data.ts_dev);
 		} else {
 			pr_info("%s: Disabling touch panel...\n", __func__);
-			touch_disabler_data.tp_dev->close(touch_disabler_data.tp_dev);
+			touch_disabler_data.ts_dev->close(touch_disabler_data.ts_dev);
 		}
 	} else {
 		pr_error("%s: Touch panel data struct is uninitialised!\n", __func__);
@@ -55,7 +55,7 @@ void touch_disabler_set_touch(bool status)
 
 static int __init touch_disabler_init(void)
 {
-	touch_disabler_data.tp_dev = NULL;
+	touch_disabler_data.ts_dev = NULL;
 	touch_disabler_data.tk_dev = NULL;
 	return 0;
 }

@@ -15,7 +15,7 @@
 #define TOUCH_DISABLER_H
 
 typedef struct {
-	struct input_dev *tp_dev;
+	struct input_dev *ts_dev;
 	struct input_dev *tk_dev;
 } touch_disabler_data_t;
 

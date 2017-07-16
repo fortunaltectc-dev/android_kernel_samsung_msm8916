@@ -21,6 +21,6 @@ typedef struct {
 
 input_disabler_data_t input_disabler_data;
 
-void inputdisabler_set_touch(bool status);
+void input_disabler_set_touch(bool status);
 
 #endif

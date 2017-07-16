@@ -25,7 +25,7 @@
  * When panel blank or unblank, touch devices will enabled or disabled.
  *
  */
-void inputdisabler_set_touch(bool status)
+void input_disabler_set_touch(bool status)
 {
 	/* check if the struct has been initialised by the touch driver */
 	if (input_disabler_data.tp_dev) {

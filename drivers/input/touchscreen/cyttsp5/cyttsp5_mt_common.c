@@ -1136,10 +1136,6 @@ int cyttsp5_mt_probe(struct device *dev)
 		goto error_alloc_failed;
 	}
 
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = md->input;
-#endif
-
 	if (md->pdata->inp_dev_name)
 		md->input->name = md->pdata->inp_dev_name;
 	else
@@ -1170,6 +1166,9 @@ int cyttsp5_mt_probe(struct device *dev)
 #endif
 
 	dev_dbg(dev, "%s:done\n", __func__);
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = md->input;
+#endif
 	return 0;
 
 error_init_input:
@@ -1195,6 +1194,10 @@ int cyttsp5_mt_release(struct device *dev)
 		pm_runtime_get_noresume(dev);*/
 
 	unregister_early_suspend(&md->es);
+#endif
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
 #endif
 
 	if (md->input_device_registered) {

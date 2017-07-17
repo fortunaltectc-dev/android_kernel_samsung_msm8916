@@ -1727,11 +1727,6 @@ static int ist30xx_probe(struct i2c_client *client,
 #if defined(USE_OPEN_CLOSE)
 	input_dev->open = imagis_ts_open;
 	input_dev->close = imagis_ts_close;
-
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
-#endif
-
 #endif
 
 	init_timer(&event_timer);
@@ -1748,7 +1743,12 @@ static int ist30xx_probe(struct i2c_client *client,
 	ist30xx_initialized = 1;
 	tsp_err("%s: Probe end\n", __func__);
 	ist30xx_dbg_level = prev_dbg_level;
+#if defined(USE_OPEN_CLOSE)
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 
+#endif
 	return 0;
 
 err_irq:
@@ -1779,7 +1779,9 @@ err_alloc_dev:
 static int ist30xx_remove(struct i2c_client *client)
 {
 	struct ist30xx_data *data = i2c_get_clientdata(client);
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
 	ist30xx_disable_irq(data);
 	free_irq(client->irq, data);
 	ist30xx_power_off();

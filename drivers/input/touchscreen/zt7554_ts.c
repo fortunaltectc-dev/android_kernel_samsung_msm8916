@@ -3674,10 +3674,6 @@ static int zt7554_ts_probe(struct i2c_client *client, const struct i2c_device_id
 	set_bit(MT_TOOL_FINGER, info->input_dev->keybit);
 	input_mt_init_slots(info->input_dev, info->cap_info.multi_fingers, 0);
 
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = info->input_dev;
-#endif
-
 	info->input_dev->open = zt7554_input_open;
 	info->input_dev->close = zt7554_input_close;
 
@@ -3762,6 +3758,9 @@ static int zt7554_ts_probe(struct i2c_client *client, const struct i2c_device_id
 #endif
 	dev_info(&client->dev, "zinitix touch probe done.\n");
 
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = info->input_dev;
+#endif
 	return 0;
 
 #ifdef SEC_FACTORY_TEST
@@ -3806,6 +3805,10 @@ static int zt7554_ts_remove(struct i2c_client *client)
 {
 	struct zt7554_ts_info *info = i2c_get_clientdata(client);
 	struct zt7554_ts_dt_data *pdata = info->pdata;
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
 
 	disable_irq(info->irq);
 	down(&info->work_lock);

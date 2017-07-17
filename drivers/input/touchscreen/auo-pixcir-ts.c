@@ -581,10 +581,6 @@ static int auo_pixcir_probe(struct i2c_client *client,
 	snprintf(ts->phys, sizeof(ts->phys),
 		 "%s/input0", dev_name(&client->dev));
 
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
-#endif
-
 	input_dev->name = "AUO-Pixcir touchscreen";
 	input_dev->phys = ts->phys;
 	input_dev->id.bustype = BUS_I2C;
@@ -676,7 +672,9 @@ static int auo_pixcir_probe(struct i2c_client *client,
 	}
 
 	i2c_set_clientdata(client, ts);
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 	return 0;
 }
 

@@ -263,10 +263,6 @@ static int w90x900ts_probe(struct platform_device *pdev)
 		goto fail3;
 	}
 
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
-#endif
-
 	input_dev->name = "W90P910 TouchScreen";
 	input_dev->phys = "w90p910ts/event0";
 	input_dev->id.bustype = BUS_HOST;
@@ -297,7 +293,9 @@ static int w90x900ts_probe(struct platform_device *pdev)
 		goto fail5;
 
 	platform_set_drvdata(pdev, w90p910_ts);
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 	return 0;
 
 fail5:	free_irq(w90p910_ts->irq_num, w90p910_ts);
@@ -313,7 +311,9 @@ static int w90x900ts_remove(struct platform_device *pdev)
 {
 	struct w90p910_ts *w90p910_ts = platform_get_drvdata(pdev);
 	struct resource *res;
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
 	free_irq(w90p910_ts->irq_num, w90p910_ts);
 	del_timer_sync(&w90p910_ts->timer);
 	iounmap(w90p910_ts->ts_reg);

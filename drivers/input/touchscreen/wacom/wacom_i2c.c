@@ -321,9 +321,6 @@ static void wacom_i2c_set_input_values(struct i2c_client *client,
 				       struct input_dev *input_dev)
 {
 	/*Set input values before registering input device */
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
-#endif
 
 	input_dev->name = "sec_e-pen";
 	input_dev->id.bustype = BUS_I2C;
@@ -1487,7 +1484,9 @@ static int wacom_parse_dt(struct device *dev,
 static int wacom_i2c_remove(struct i2c_client *client)
 {
 	struct wacom_i2c *wac_i2c = i2c_get_clientdata(client);
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
 	free_irq(client->irq, wac_i2c);
 #ifdef WACOM_PDCT_WORK_AROUND	
 	free_irq(wac_i2c->irq_pdct, wac_i2c);
@@ -1877,7 +1876,9 @@ static int wacom_i2c_probe(struct i2c_client *client,
 #ifdef WACOM_RESETPIN_DELAY
 	schedule_delayed_work(&wac_i2c->work_wacom_reset, msecs_to_jiffies(5000));
 #endif
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input;
+#endif
 	return 0;
 
 err_request_irq_pen_inster:

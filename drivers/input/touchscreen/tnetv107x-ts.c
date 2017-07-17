@@ -316,10 +316,6 @@ static int tsc_probe(struct platform_device *pdev)
 	}
 	input_set_drvdata(ts->input_dev, ts);
 
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = ts->input_dev;
-#endif
-
 	ts->input_dev->name       = pdev->name;
 	ts->input_dev->id.bustype = BUS_HOST;
 	ts->input_dev->dev.parent = &pdev->dev;
@@ -345,7 +341,9 @@ static int tsc_probe(struct platform_device *pdev)
 		dev_err(dev, "failed input device registration\n");
 		goto error_reg;
 	}
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = ts->input_dev;
+#endif
 	return 0;
 
 error_reg:
@@ -368,7 +366,9 @@ error_res:
 static int tsc_remove(struct platform_device *pdev)
 {
 	struct tsc_data *ts = platform_get_drvdata(pdev);
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
 	input_unregister_device(ts->input_dev);
 	free_irq(ts->tsc_irq, ts);
 	clk_put(ts->clk);

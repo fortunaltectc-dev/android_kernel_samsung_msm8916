@@ -461,10 +461,6 @@ static int mms114_probe(struct i2c_client *client,
 	data->input_dev = input_dev;
 	data->pdata = pdata;
 
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
-#endif
-
 	input_dev->name = "MELPAS MMS114 Touchscreen";
 	input_dev->id.bustype = BUS_I2C;
 	input_dev->dev.parent = &client->dev;
@@ -520,7 +516,9 @@ static int mms114_probe(struct i2c_client *client,
 		dev_err(&client->dev, "Failed to register input device\n");
 		return error;
 	}
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 	return 0;
 }
 

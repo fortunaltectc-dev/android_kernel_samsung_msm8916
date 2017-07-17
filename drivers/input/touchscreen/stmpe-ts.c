@@ -353,10 +353,6 @@ static int stmpe_input_probe(struct platform_device *pdev)
 	if (error)
 		return error;
 
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = idev;
-#endif
-
 	idev->name = STMPE_TS_NAME;
 	idev->phys = STMPE_TS_NAME"/input0";
 	idev->id.bustype = BUS_I2C;
@@ -377,14 +373,18 @@ static int stmpe_input_probe(struct platform_device *pdev)
 		dev_err(&pdev->dev, "Could not register input device\n");
 		return error;
 	}
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = idev;
+#endif
 	return 0;
 }
 
 static int stmpe_ts_remove(struct platform_device *pdev)
 {
 	struct stmpe_touch *ts = platform_get_drvdata(pdev);
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
 	stmpe_disable(ts->stmpe, STMPE_BLOCK_TOUCHSCREEN);
 
 	return 0;

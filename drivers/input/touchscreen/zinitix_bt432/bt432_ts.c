@@ -5013,11 +5013,6 @@ static int bt432_ts_probe(struct i2c_client *client,
 #ifdef USE_OPEN_CLOSE
 	input_dev->open = bt432_ts_open;
 	input_dev->close = bt432_ts_close;
-
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
-#endif
-
 #endif
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
@@ -5050,7 +5045,11 @@ static int bt432_ts_probe(struct i2c_client *client,
 #ifdef CONFIG_MUIC_NOTIFIER
 	muic_notifier_register(&info->charger_nb, bt432_muic_notifier, MUIC_NOTIFY_DEV_TSP);
 #endif
-
+#ifdef USE_OPEN_CLOSE
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
+#endif
 	return 0;
 
 #ifdef SEC_FACTORY_TEST
@@ -5085,7 +5084,11 @@ static int bt432_ts_remove(struct i2c_client *client)
 {
 	struct bt432_ts_info *info = i2c_get_clientdata(client);
 	struct bt432_ts_dt_data *pdata = info->pdata;
-
+#ifdef USE_OPEN_CLOSE
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
+#endif
 	disable_irq(info->irq);
 	down(&info->work_lock);
 

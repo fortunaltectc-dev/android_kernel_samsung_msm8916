@@ -2811,11 +2811,6 @@ static int  mxt_probe(struct i2c_client *client,
 #if defined(USE_OPEN_CLOSE)
 	input_dev->open = mxt_input_open;
 	input_dev->close = mxt_input_close;
-
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
-#endif
-
 #endif
 	data->input_dev = input_dev;
 	data->pdata = pdata;
@@ -2948,7 +2943,11 @@ static int  mxt_probe(struct i2c_client *client,
 */
 
 	printk(KERN_ERR "%s Completed", __func__);//psb added
-
+#if defined(USE_OPEN_CLOSE)
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
+#endif
 	return 0;
 
 err_touch_init:
@@ -2978,7 +2977,12 @@ err_allocate_input_device:
 static int mxt_remove(struct i2c_client *client)
 {
 	struct mxt_data *data = i2c_get_clientdata(client);
+#if defined(USE_OPEN_CLOSE)
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 
+#endif
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	unregister_early_suspend(&data->early_suspend);
 #endif

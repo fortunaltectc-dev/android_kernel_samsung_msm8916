@@ -5991,10 +5991,6 @@ static int bt532_ts_probe(struct i2c_client *client,
 		0, 1, 0, 0);
 #endif
 
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = info->input_dev;
-#endif
-
 	info->input_dev->open = bt532_input_open;
 	info->input_dev->close = bt532_input_close;
 	set_bit(MT_TOOL_FINGER, info->input_dev->keybit);
@@ -6103,6 +6099,10 @@ static int bt532_ts_probe(struct i2c_client *client,
 	bt532_set_tsp_info(info);
 #endif
 
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = info->input_dev;
+#endif
 	return 0;
 
 #ifdef SEC_FACTORY_TEST
@@ -6144,6 +6144,10 @@ static int bt532_ts_remove(struct i2c_client *client)
 {
 	struct bt532_ts_info *info = i2c_get_clientdata(client);
 	struct bt532_ts_platform_data *pdata = info->pdata;
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
 
 	disable_irq(info->irq);
 	down(&info->work_lock);

@@ -951,10 +951,6 @@ static int mms_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	input_dev->open = mms_input_open;
 	input_dev->close = mms_input_close;
 
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
-#endif
-
 #endif
 
 	input_set_events_per_packet(input_dev, 200);
@@ -1063,6 +1059,9 @@ static int mms_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	info->init = false;
 	dev_info(&client->dev,
 			"MELFAS " CHIP_NAME " Touchscreen is initialized successfully\n");
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 	return 0;
 
 
@@ -1114,7 +1113,9 @@ ERROR:
 static int mms_remove(struct i2c_client *client)
 {
 	struct mms_ts_info *info = i2c_get_clientdata(client);
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
 	if (info->irq >= 0) {
 		free_irq(info->irq, info);
 	}

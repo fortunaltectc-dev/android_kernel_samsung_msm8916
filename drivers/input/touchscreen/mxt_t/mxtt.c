@@ -3003,10 +3003,6 @@ static int  mxt_probe(struct i2c_client *client,
 			//tsp_debug_info(true, &ddata->client->dev,"%s: cannot set pinctrl state\n", __func__);
 	}
 
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
-#endif
-
 	input_dev->open = mxt_input_open;
 	input_dev->close = mxt_input_close;
 	set_bit(EV_SYN, input_dev->evbit);
@@ -3140,6 +3136,9 @@ static int  mxt_probe(struct i2c_client *client,
 	register_early_suspend(&data->early_suspend);
 #endif
 
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 	return 0;
 	
 #ifdef COMMON_INPUT_BOOSTER
@@ -3180,7 +3179,9 @@ err_allocate_data:
 static int  mxt_remove(struct i2c_client *client)
 {
 	struct mxt_data *data = i2c_get_clientdata(client);
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	unregister_early_suspend(&data->early_suspend);
 #endif

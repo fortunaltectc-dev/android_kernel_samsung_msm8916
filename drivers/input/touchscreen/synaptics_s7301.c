@@ -1340,10 +1340,6 @@ static int  synaptics_ts_probe(struct i2c_client *client,
 		goto err_pdata;
 	}
 
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input;
-#endif
-
 	ddata->input = input;
 	input_set_drvdata(input, ddata);
 
@@ -1444,7 +1440,9 @@ printk("pdata->max_x : %d, pdata->max_y : %d, pdata->max_pressure : %d, pdata->m
 		ret = -ENODEV;
 		goto err_make_sysfs_failed;
 	}
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input;
+#endif
 	return 0;
 
 err_make_sysfs_failed:
@@ -1462,7 +1460,9 @@ err_check_functionality_failed:
 static int synaptics_ts_remove(struct i2c_client *client)
 {
 	struct synaptics_drv_data *data = i2c_get_clientdata(client);
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
 //	unregister_early_suspend(&data->early_suspend);
 	free_irq(client->irq, data);
 	remove_tsp_sysfs(data);

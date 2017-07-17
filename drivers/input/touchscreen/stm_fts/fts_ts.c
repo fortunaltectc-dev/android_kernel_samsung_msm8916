@@ -1356,11 +1356,6 @@ static int fts_probe(struct i2c_client *client, const struct i2c_device_id *idp)
 #ifdef USE_OPEN_CLOSE
 	info->input_dev->open = fts_input_open;
 	info->input_dev->close = fts_input_close;
-
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = info->input_dev;
-#endif
-
 #endif
 
 #ifdef TSP_INIT_COMPLETE
@@ -1544,7 +1539,11 @@ static int fts_probe(struct i2c_client *client, const struct i2c_device_id *idp)
 #endif
 	complete_all(&info->init_done);
 #endif /* TSP_INIT_COMPLETE */
-
+#ifdef USE_OPEN_CLOSE
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = info->input_dev;
+#endif
+#endif
 	return 0;
 
 #ifdef SEC_TSP_FACTORY_TEST
@@ -1588,7 +1587,11 @@ err_input_allocate_device:
 static int fts_remove(struct i2c_client *client)
 {
 	struct fts_ts_info *info = i2c_get_clientdata(client);
-
+#ifdef USE_OPEN_CLOSE
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
+#endif
 	tsp_debug_info(true, &info->client->dev, "FTS removed \n");
 
 #ifdef CONFIG_HAS_EARLYSUSPEND

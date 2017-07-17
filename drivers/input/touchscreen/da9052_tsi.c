@@ -254,10 +254,6 @@ static int da9052_ts_probe(struct platform_device *pdev)
 	tsi->stopped = true;
 	INIT_DELAYED_WORK(&tsi->ts_pen_work, da9052_ts_pen_work);
 
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
-#endif
-
 	input_dev->id.version = 0x0101;
 	input_dev->id.vendor = 0x15B6;
 	input_dev->id.product = 0x9052;
@@ -311,7 +307,9 @@ static int da9052_ts_probe(struct platform_device *pdev)
 		goto err_free_datardy_irq;
 
 	platform_set_drvdata(pdev, tsi);
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 	return 0;
 
 err_free_datardy_irq:
@@ -328,7 +326,9 @@ err_free_mem:
 static int  da9052_ts_remove(struct platform_device *pdev)
 {
 	struct da9052_tsi *tsi = platform_get_drvdata(pdev);
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
 	da9052_reg_write(tsi->da9052, DA9052_LDO9_REG, 0x19);
 
 	da9052_free_irq(tsi->da9052, DA9052_IRQ_TSIREADY, tsi);

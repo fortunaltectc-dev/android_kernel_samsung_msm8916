@@ -1716,10 +1716,6 @@ static int ist30xx_probe(struct i2c_client *client,
 
 	input_mt_init_slots(input_dev, IST30XX_MAX_MT_FINGERS, 0);
 
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
-#endif
-
 	input_dev->name = "sec_touchscreen";
 	input_dev->id.bustype = BUS_I2C;
 	input_dev->dev.parent = &client->dev;
@@ -1926,7 +1922,9 @@ static int ist30xx_probe(struct i2c_client *client,
 #endif
 
 	tsp_info("### IMAGIS probe success ###\n");
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 	return 0;
 
 err_sec_sysfs:
@@ -1967,7 +1965,9 @@ err_alloc_dev:
 static int ist30xx_remove(struct i2c_client *client)
 {
 	struct ist30xx_data *data = i2c_get_clientdata(client);
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
 #ifdef CONFIG_DUAL_TOUCH_IC_CHECK
 	if(!probe_finished)
 	{

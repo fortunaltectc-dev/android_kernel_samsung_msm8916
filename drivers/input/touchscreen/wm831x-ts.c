@@ -351,9 +351,6 @@ static int wm831x_ts_probe(struct platform_device *pdev)
 	}
 
 	/* set up touch configuration */
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
-#endif
 	input_dev->name = "WM831x touchscreen";
 	input_dev->phys = "wm831x";
 	input_dev->open = wm831x_ts_input_open;
@@ -376,6 +373,9 @@ static int wm831x_ts_probe(struct platform_device *pdev)
 		goto err_pd_irq;
 
 	platform_set_drvdata(pdev, wm831x_ts);
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 	return 0;
 
 err_pd_irq:
@@ -390,7 +390,9 @@ err_alloc:
 static int wm831x_ts_remove(struct platform_device *pdev)
 {
 	struct wm831x_ts *wm831x_ts = platform_get_drvdata(pdev);
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
 	free_irq(wm831x_ts->pd_irq, wm831x_ts);
 	free_irq(wm831x_ts->data_irq, wm831x_ts);
 

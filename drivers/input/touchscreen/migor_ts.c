@@ -156,10 +156,6 @@ static int migor_ts_probe(struct i2c_client *client,
 
 	__set_bit(BTN_TOUCH, input->keybit);
 
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input;
-#endif
-
 	input_set_abs_params(input, ABS_X, 95, 955, 0, 0);
 	input_set_abs_params(input, ABS_Y, 85, 935, 0, 0);
 
@@ -186,7 +182,9 @@ static int migor_ts_probe(struct i2c_client *client,
 
 	i2c_set_clientdata(client, priv);
 	device_init_wakeup(&client->dev, 1);
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input;
+#endif
 	return 0;
 
  err_free_irq:
@@ -200,7 +198,9 @@ static int migor_ts_probe(struct i2c_client *client,
 static int migor_ts_remove(struct i2c_client *client)
 {
 	struct migor_ts_priv *priv = i2c_get_clientdata(client);
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
 	free_irq(priv->irq, priv);
 	input_unregister_device(priv->input);
 	kfree(priv);

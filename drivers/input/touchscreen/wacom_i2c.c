@@ -175,10 +175,6 @@ static int wacom_i2c_probe(struct i2c_client *client,
 	wac_i2c->client = client;
 	wac_i2c->input = input;
 
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input;
-#endif
-
 	input->name = "Wacom I2C Digitizer";
 	input->id.bustype = BUS_I2C;
 	input->id.vendor = 0x56a;
@@ -222,6 +218,9 @@ static int wacom_i2c_probe(struct i2c_client *client,
 	}
 
 	i2c_set_clientdata(client, wac_i2c);
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input;
+#endif
 	return 0;
 
 err_free_irq:
@@ -236,7 +235,9 @@ err_free_mem:
 static int wacom_i2c_remove(struct i2c_client *client)
 {
 	struct wacom_i2c *wac_i2c = i2c_get_clientdata(client);
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
 	free_irq(client->irq, wac_i2c);
 	input_unregister_device(wac_i2c->input);
 	kfree(wac_i2c);

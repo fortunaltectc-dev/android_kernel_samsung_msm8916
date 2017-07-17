@@ -655,9 +655,6 @@ static int wm97xx_probe(struct device *dev)
 	}
 
 	/* set up touch configuration */
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = wm->input_dev;
-#endif
 	wm->input_dev->name = "wm97xx touchscreen";
 	wm->input_dev->phys = "wm97xx";
 	wm->input_dev->open = wm97xx_ts_input_open;
@@ -707,7 +704,9 @@ static int wm97xx_probe(struct device *dev)
 	ret = platform_device_add(wm->touch_dev);
 	if (ret < 0)
 		goto touch_reg_err;
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = wm->input_dev;
+#endif
 	return ret;
 
  touch_reg_err:
@@ -730,7 +729,9 @@ static int wm97xx_probe(struct device *dev)
 static int wm97xx_remove(struct device *dev)
 {
 	struct wm97xx *wm = dev_get_drvdata(dev);
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
 	platform_device_unregister(wm->battery_dev);
 	platform_device_unregister(wm->touch_dev);
 	input_unregister_device(wm->input_dev);

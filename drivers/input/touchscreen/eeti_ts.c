@@ -195,10 +195,6 @@ static int eeti_ts_probe(struct i2c_client *client,
 	input_set_abs_params(input, ABS_Y, 0, EETI_MAXVAL, 0, 0);
 	input_set_abs_params(input, ABS_PRESSURE, 0, 0xff, 0, 0);
 
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input;
-#endif
-
 	input->name = client->name;
 	input->id.bustype = BUS_I2C;
 	input->dev.parent = &client->dev;
@@ -241,6 +237,9 @@ static int eeti_ts_probe(struct i2c_client *client,
 	eeti_ts_stop(priv);
 
 	device_init_wakeup(&client->dev, 0);
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input;
+#endif
 	return 0;
 
 err3:
@@ -258,7 +257,9 @@ err0:
 static int eeti_ts_remove(struct i2c_client *client)
 {
 	struct eeti_ts_priv *priv = i2c_get_clientdata(client);
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
 	free_irq(priv->irq, priv);
 	/*
 	 * eeti_ts_stop() leaves IRQ disabled. We need to re-enable it

@@ -261,10 +261,6 @@ static int lpc32xx_ts_probe(struct platform_device *pdev)
 		goto err_unmap;
 	}
 
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input;
-#endif
-
 	input->name = MOD_NAME;
 	input->phys = "lpc32xx/input0";
 	input->id.bustype = BUS_HOST;
@@ -299,7 +295,9 @@ static int lpc32xx_ts_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, tsc);
 	device_init_wakeup(&pdev->dev, 1);
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input;
+#endif
 	return 0;
 
 err_free_irq:
@@ -321,7 +319,9 @@ static int lpc32xx_ts_remove(struct platform_device *pdev)
 {
 	struct lpc32xx_tsc *tsc = platform_get_drvdata(pdev);
 	struct resource *res;
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
 	device_init_wakeup(&pdev->dev, 0);
 	free_irq(tsc->irq, tsc);
 

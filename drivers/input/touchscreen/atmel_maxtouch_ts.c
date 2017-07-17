@@ -2187,6 +2187,9 @@ static int mxt_acquire_irq(struct mxt_data *data)
 
 static void mxt_free_input_device(struct mxt_data *data)
 {
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
 	if (data->input_dev) {
 		input_unregister_device(data->input_dev);
 		data->input_dev = NULL;
@@ -2870,10 +2873,6 @@ static int mxt_create_input_dev(struct mxt_data *data)
 		return -ENOMEM;
 	}
 
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
-#endif
-
 	input_dev->name = "Atmel maXTouch Touchscreen";
 	input_dev->phys = data->phys;
 	input_dev->id.bustype = BUS_I2C;
@@ -2933,6 +2932,9 @@ static int mxt_create_input_dev(struct mxt_data *data)
 
 	data->input_dev = input_dev;
 
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = input_dev;
+#endif
 	return 0;
 
 err_free_mem:

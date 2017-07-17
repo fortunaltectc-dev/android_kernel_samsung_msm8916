@@ -201,10 +201,6 @@ static int __init mc13783_ts_probe(struct platform_device *pdev)
 	if (!priv->workq)
 		goto err_free_mem;
 
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = idev;
-#endif
-
 	idev->name = MC13783_TS_NAME;
 	idev->dev.parent = &pdev->dev;
 
@@ -227,6 +223,9 @@ static int __init mc13783_ts_probe(struct platform_device *pdev)
 	}
 
 	platform_set_drvdata(pdev, priv);
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = idev;
+#endif
 	return 0;
 
 err_destroy_wq:
@@ -240,7 +239,9 @@ err_free_mem:
 static int mc13783_ts_remove(struct platform_device *pdev)
 {
 	struct mc13783_ts_priv *priv = platform_get_drvdata(pdev);
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.ts_dev = NULL;
+#endif
 	platform_set_drvdata(pdev, NULL);
 
 	destroy_workqueue(priv->workq);

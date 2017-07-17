@@ -18,6 +18,8 @@
 
 #include <linux/input/touch_disabler.h>
 
+touch_disabler_data_t touch_disabler_data;
+
 /*
  * Touch key/panel enabler/disabler for samsung touch keys/panel drivers.
  *

@@ -51,7 +51,7 @@ static ssize_t touch_disabler_set_enabled(struct kobject *kobj,
 {
 	/* only set the variable if mode is set to manual */
 	if (mode) {
-		if (!strcmp(buf, "0") || !strcmp(buf, "1")) {
+		if (!strncmp(buf, "0", 1) || !strncmp(buf, "1", 1)) {
 			sscanf(buf, "%du", &enabled);
 			_touch_disabler_set_touch_mode(enabled);
 			return count;
@@ -80,12 +80,12 @@ static ssize_t touch_disabler_set_mode(struct kobject *kobj,
 		size_t count)
 {
 	if (!strncmp(buf, MODE_MANUAL, strlen(MODE_MANUAL)) ||
-			!strcmp(buf, "1")) {
+			!strncmp(buf, "1", 1)) {
 		mode = 1;
 		return count;
 	}
 	else if (!strncmp(buf, MODE_AUTO, strlen(MODE_AUTO)) ||
-			!strcmp(buf, "0")) {
+			!strncmp(buf, "0", 1)) {
 		mode = 0;
 		return count;
 	}

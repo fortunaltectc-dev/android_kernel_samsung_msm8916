@@ -2315,11 +2315,6 @@ static int tc300k_probe(struct i2c_client *client,
 #ifdef USE_OPEN_CLOSE
 	input_dev->open = tc300k_input_open;
 	input_dev->close = tc300k_input_close;
-
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.tk_dev = input_dev;
-#endif
-
 #endif
 	
 #ifdef USE_TKEY_UPDATE_WORK
@@ -2393,6 +2388,12 @@ static int tc300k_probe(struct i2c_client *client,
 			ret);
 		goto err_register_led;
 	}
+
+#ifdef USE_OPEN_CLOSE
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_set_tk_dev(input_dev);
+#endif
+#endif
 
 	dev_info(&client->dev, "successfully probed.\n");
 

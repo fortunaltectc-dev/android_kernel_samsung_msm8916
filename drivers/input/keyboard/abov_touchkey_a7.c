@@ -1500,11 +1500,6 @@ static int abov_tk_probe(struct i2c_client *client,
 	input_dev->dev.parent = &client->dev;
 	input_dev->open = abov_tk_input_open;
 	input_dev->close = abov_tk_input_close;
-
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.tk_dev = input_dev;
-#endif
-
 	set_bit(EV_KEY, input_dev->evbit);
 	set_bit(KEY_RECENT, input_dev->keybit);
 	set_bit(KEY_BACK, input_dev->keybit);
@@ -1563,7 +1558,9 @@ static int abov_tk_probe(struct i2c_client *client,
 		schedule_delayed_work(&info->led_twinkle_work, msecs_to_jiffies(400));
 	}
 #endif
-
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_set_tk_dev(input_dev);
+#endif
 	return 0;
 
 err_req_irq:

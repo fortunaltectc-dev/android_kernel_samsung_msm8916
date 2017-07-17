@@ -2880,11 +2880,6 @@ static int tc300k_probe(struct i2c_client *client,
 	input_dev->dev.parent = &client->dev;
 	input_dev->open = tc300k_input_open;
 	input_dev->close = tc300k_input_close;
-
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.tk_dev = input_dev;
-#endif
-
 	data->tsk_ev_val = tsk_ev;
 	data->key_num = ARRAY_SIZE(tsk_ev)/2;
 	dev_info(&client->dev, "[TK] number of keys = %d\n", data->key_num);
@@ -2951,6 +2946,10 @@ static int tc300k_probe(struct i2c_client *client,
 		dev_info(&client->dev, "%s: mode %d, sar %d\n",
 				__func__, ret, data->sar_enable);
 	}
+#endif
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_set_tk_dev(input_dev);
 #endif
 
 	dev_err(&client->dev, "[TK] %s done\n", __func__);

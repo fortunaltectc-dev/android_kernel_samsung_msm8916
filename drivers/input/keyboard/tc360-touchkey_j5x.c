@@ -2564,11 +2564,6 @@ static void tc300k_destroy_interface(struct tc300k_data *data)
 #ifdef USE_OPEN_CLOSE
 	input_dev->open = tc300k_input_open;
 	input_dev->close = tc300k_input_close;
-
-#if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.tk_dev = input_dev;
-#endif
-
 #endif
 #ifdef USE_TKEY_UPDATE_WORK
 	data->fw_up_running = false;	
@@ -2646,6 +2641,12 @@ static void tc300k_destroy_interface(struct tc300k_data *data)
 		data->led_twinkle_check =  1;
 		schedule_delayed_work(&data->led_twinkle_work, msecs_to_jiffies(400));
 	}
+#endif
+
+#ifdef USE_OPEN_CLOSE
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_set_tk_dev(input_dev);
+#endif
 #endif
 	dev_info(&client->dev, "successfully probed.\n");
 

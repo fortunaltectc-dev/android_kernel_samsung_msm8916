@@ -41,7 +41,7 @@ void touch_disabler_set_touch(bool status)
 			touch_disabler_data.ts_dev->close(touch_disabler_data.ts_dev);
 		}
 	} else {
-		pr_error("%s: Touch panel data struct is uninitialised!\n", __func__);
+		pr_info("%s: Touch panel data struct is uninitialised!\n", __func__);
 	}
 
 	if (touch_disabler_data.tk_dev) {
@@ -55,7 +55,7 @@ void touch_disabler_set_touch(bool status)
 			touch_disabler_data.tk_dev->close(touch_disabler_data.tk_dev);
 		}
 	} else {
-		pr_error("%s: Touch key data struct is uninitialised!\n", __func__);
+		pr_info("%s: Touch key data struct is uninitialised!\n", __func__);
 	}
 }
 

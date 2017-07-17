@@ -39,14 +39,15 @@ touch_disabler_data_t touch_disabler_data;
 
 static void _touch_disabler_set_touch(bool status);
 
-static ssize_t enabled_show(struct kobject *kobj, struct kobj_attribute *attr,
-		      char *buf)
+static ssize_t touch_disabler_get_enabled(struct kobject *kobj,
+		struct kobj_attribute *attr, char *buf)
 {
 	return sprintf(buf, "%d\n", enabled);
 }
 
-static ssize_t enabled_store(struct kobject *kobj, struct kobj_attribute *attr,
-		      const char *buf, size_t count)
+static ssize_t touch_disabler_set_enabled(struct kobject *kobj,
+		struct kobj_attribute *attr, const char *buf,
+		size_t count)
 {
 	/* only set the variable if mode is set to manual */
 	if (mode) {
@@ -57,8 +58,8 @@ static ssize_t enabled_store(struct kobject *kobj, struct kobj_attribute *attr,
 	return count;
 }
 
-static ssize_t mode_show(struct kobject *kobj, struct kobj_attribute *attr,
-		      char *buf)
+static ssize_t touch_disabler_get_mode(struct kobject *kobj,
+		struct kobj_attribute *attr, char *buf)
 {
 	if (mode) {
 		return sprintf(buf, "%s\n", MODE_MANUAL);
@@ -67,8 +68,9 @@ static ssize_t mode_show(struct kobject *kobj, struct kobj_attribute *attr,
 	}
 }
 
-static ssize_t mode_store(struct kobject *kobj, struct kobj_attribute *attr,
-		      const char *buf, size_t count)
+static ssize_t touch_disabler_set_mode(struct kobject *kobj,
+		struct kobj_attribute *attr, const char *buf,
+		size_t count)
 {
 	if (!strncmp(buf, MODE_MANUAL, strlen(MODE_MANUAL)) || !strncmp(buf, "1", 1)) {
 		mode = 1;
@@ -79,11 +81,11 @@ static ssize_t mode_store(struct kobject *kobj, struct kobj_attribute *attr,
 	return count;
 }
 
-static struct kobj_attribute mode_attribute =__ATTR(mode, 0660, mode_show,
-						   mode_store);
+static struct kobj_attribute mode_attribute =__ATTR(mode, 0660, touch_disabler_get_mode,
+						   touch_disabler_set_mode);
 
-static struct kobj_attribute enabled_attribute =__ATTR(enabled, 0660, enabled_show,
-						   enabled_store);
+static struct kobj_attribute enabled_attribute =__ATTR(enabled, 0660, touch_disabler_get_enabled,
+						   touch_disabler_set_enabled);
 
 /*
  * Touch key/panel enabler/disabler for samsung touch keys/panel drivers.

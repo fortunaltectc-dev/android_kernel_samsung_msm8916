@@ -35,7 +35,7 @@ static int mode;    /* driver mode, between auto (0) and manual (1) */
 #define MODE_AUTO "auto"
 #define MODE_MANUAL "manual"
 
-touch_disabler_data_t touch_disabler_data;
+static touch_disabler_data_t touch_disabler_data;
 
 static void _touch_disabler_set_touch(bool status);
 
@@ -147,6 +147,16 @@ static void _touch_disabler_set_touch(bool status)
 	} else {
 		pr_warn("%s: Touch key data struct is uninitialised!\n", __func__);
 	}
+}
+
+void touch_disabler_set_ts_dev(struct input_dev *ts_dev)
+{
+	touch_disabler_data.ts_dev = ts_dev;
+}
+
+void touch_disabler_set_tk_dev(struct input_dev *tk_dev)
+{
+	touch_disabler_data.tk_dev = tk_dev;
 }
 
 static int __init touch_disabler_init(void)

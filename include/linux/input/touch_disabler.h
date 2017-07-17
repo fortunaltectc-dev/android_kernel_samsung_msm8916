@@ -19,8 +19,8 @@ typedef struct {
 	struct input_dev *tk_dev;
 } touch_disabler_data_t;
 
-extern touch_disabler_data_t touch_disabler_data;
-
+void touch_disabler_set_tk_dev(struct input_dev *ts_dev);
 void touch_disabler_set_touch(bool status);
+void touch_disabler_set_ts_dev(struct input_dev *ts_dev);
 
 #endif /* TOUCH_DISABLER_H */

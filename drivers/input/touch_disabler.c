@@ -60,7 +60,7 @@ static ssize_t touch_disabler_set_enabled(struct kobject *kobj,
 			return -EINVAL;
 		}
 	}
-	pr_warn("%s: Input ignored since auto mode is enabled!\n",
+	pr_warn("%s: Input ignored since auto mode is enabled.\n",
 			__func__);
 	return -EINVAL;
 }
@@ -81,11 +81,15 @@ static ssize_t touch_disabler_set_mode(struct kobject *kobj,
 {
 	if (!strncmp(buf, MODE_MANUAL, strlen(MODE_MANUAL)) ||
 			!strncmp(buf, "1", 1)) {
+		pr_info("%s: manual mode is enabled.\n",
+			__func__);
 		mode = 1;
 		return count;
 	}
 	else if (!strncmp(buf, MODE_AUTO, strlen(MODE_AUTO)) ||
 			!strncmp(buf, "0", 1)) {
+		pr_info("%s: auto mode is enabled.\n",
+			__func__);
 		mode = 0;
 		return count;
 	}

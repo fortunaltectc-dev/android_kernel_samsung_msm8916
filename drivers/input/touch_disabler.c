@@ -16,6 +16,8 @@
 #include <linux/of.h>
 #include <linux/slab.h>
 
+#include <linux/input.h>
+
 #include <linux/input/touch_disabler.h>
 
 touch_disabler_data_t touch_disabler_data;

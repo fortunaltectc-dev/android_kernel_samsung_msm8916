@@ -51,11 +51,18 @@ static ssize_t touch_disabler_set_enabled(struct kobject *kobj,
 {
 	/* only set the variable if mode is set to manual */
 	if (mode) {
-		sscanf(buf, "%du", &enabled);
-		_touch_disabler_set_touch(enabled);
+		if (!strcmp(buf, "0") || !strcmp(buf, "1")) {
+			sscanf(buf, "%du", &enabled);
+			_touch_disabler_set_touch(enabled);
+			return count;
+		} else {
+			pr_err("%s: Invalid input passed\n", __func__);
+			return -EINVAL;
+		}
 	}
-
-	return count;
+	pr_warn("%s: Input ignored since auto mode is enabled!\n",
+			__func__);
+	return -EINVAL;
 }
 
 static ssize_t touch_disabler_get_mode(struct kobject *kobj,
@@ -72,13 +79,18 @@ static ssize_t touch_disabler_set_mode(struct kobject *kobj,
 		struct kobj_attribute *attr, const char *buf,
 		size_t count)
 {
-	if (!strncmp(buf, MODE_MANUAL, strlen(MODE_MANUAL)) || !strncmp(buf, "1", 1)) {
+	if (!strncmp(buf, MODE_MANUAL, strlen(MODE_MANUAL)) ||
+			!strcmp(buf, "1")) {
 		mode = 1;
+		return count;
 	}
-	else if (!strncmp(buf, MODE_AUTO, strlen(MODE_AUTO)) || !strncmp(buf, "0", 1)) {
+	else if (!strncmp(buf, MODE_AUTO, strlen(MODE_AUTO)) ||
+			!strcmp(buf, "0")) {
 		mode = 0;
+		return count;
 	}
-	return count;
+	pr_err("%s: Invalid input passed\n", __func__);
+	return -EINVAL;
 }
 
 static struct kobj_attribute mode_attribute =__ATTR(mode, 0660, touch_disabler_get_mode,

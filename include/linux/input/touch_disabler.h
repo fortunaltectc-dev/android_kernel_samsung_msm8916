@@ -23,4 +23,4 @@ extern touch_disabler_data_t touch_disabler_data;
 
 void touch_disabler_set_touch(bool status);
 
-#endif /* TOUCH_DISABLER_T */
+#endif /* TOUCH_DISABLER_H */

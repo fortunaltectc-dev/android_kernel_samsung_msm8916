@@ -37,7 +37,7 @@ static int mode;    /* driver mode, between auto (0) and manual (1) */
 
 static touch_disabler_data_t touch_disabler_data;
 
-static void _touch_disabler_set_touch(bool status);
+static void _touch_disabler_set_touch_mode(bool status);
 
 static ssize_t touch_disabler_get_enabled(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
@@ -53,7 +53,7 @@ static ssize_t touch_disabler_set_enabled(struct kobject *kobj,
 	if (mode) {
 		if (!strcmp(buf, "0") || !strcmp(buf, "1")) {
 			sscanf(buf, "%du", &enabled);
-			_touch_disabler_set_touch(enabled);
+			_touch_disabler_set_touch_mode(enabled);
 			return count;
 		} else {
 			pr_err("%s: Invalid input passed\n", __func__);
@@ -106,14 +106,14 @@ static struct kobj_attribute enabled_attribute =__ATTR(enabled, 0660, touch_disa
  * When panel blank or unblank, touch devices will enabled or disabled.
  *
  */
-void touch_disabler_set_touch(bool status)
+void touch_disabler_set_touch_mode(bool status)
 {
 	/* let mdss trigger the enaling/disabling */
 	if (!mode)
-		_touch_disabler_set_touch(status);
+		_touch_disabler_set_touch_mode(status);
 }
 
-static void _touch_disabler_set_touch(bool status)
+static void _touch_disabler_set_touch_mode(bool status)
 {
 
 	/* set the enabled variable */

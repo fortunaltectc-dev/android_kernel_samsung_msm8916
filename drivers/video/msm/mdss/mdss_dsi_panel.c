@@ -809,7 +809,7 @@ static int mdss_dsi_post_panel_on(struct mdss_panel_data *pdata)
 end:
 	pr_debug("%s:-\n", __func__);
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_set_touch(true);
+	touch_disabler_set_touch_mode(true);
 #endif
 	return 0;
 }
@@ -860,7 +860,7 @@ end:
 	pinfo->blank_state = MDSS_PANEL_BLANK_BLANK;
 	pr_debug("%s:-\n", __func__);
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_set_touch(false);
+	touch_disabler_set_touch_mode(false);
 #endif
 	return 0;
 }

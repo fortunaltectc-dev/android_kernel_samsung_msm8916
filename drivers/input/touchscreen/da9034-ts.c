@@ -357,7 +357,7 @@ static int da9034_touch_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, touch);
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
+	touch_disabler_set_ts_dev(input_dev);
 #endif
 	return 0;
 
@@ -373,7 +373,7 @@ static int da9034_touch_remove(struct platform_device *pdev)
 	struct da9034_touch *touch = platform_get_drvdata(pdev);
 
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = NULL;
+	touch_disabler_set_ts_dev(NULL);
 #endif
 	input_unregister_device(touch->input_dev);
 	kfree(touch);

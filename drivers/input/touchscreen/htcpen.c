@@ -162,7 +162,7 @@ static int htcpen_isa_probe(struct device *dev, unsigned int id)
 
 	dev_set_drvdata(dev, htcpen_dev);
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = htcpen_dev;
+	touch_disabler_set_ts_dev(htcpen_dev);
 #endif
 	return 0;
 
@@ -184,7 +184,7 @@ static int htcpen_isa_remove(struct device *dev, unsigned int id)
 {
 	struct input_dev *htcpen_dev = dev_get_drvdata(dev);
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = NULL;
+	touch_disabler_set_ts_dev(NULL);
 #endif
 	input_unregister_device(htcpen_dev);
 

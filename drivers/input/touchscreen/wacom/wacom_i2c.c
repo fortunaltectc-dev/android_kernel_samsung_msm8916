@@ -1485,7 +1485,7 @@ static int wacom_i2c_remove(struct i2c_client *client)
 {
 	struct wacom_i2c *wac_i2c = i2c_get_clientdata(client);
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = NULL;
+	touch_disabler_set_ts_dev(NULL);
 #endif
 	free_irq(client->irq, wac_i2c);
 #ifdef WACOM_PDCT_WORK_AROUND	
@@ -1877,7 +1877,7 @@ static int wacom_i2c_probe(struct i2c_client *client,
 	schedule_delayed_work(&wac_i2c->work_wacom_reset, msecs_to_jiffies(5000));
 #endif
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input;
+	touch_disabler_set_ts_dev(input);
 #endif
 	return 0;
 

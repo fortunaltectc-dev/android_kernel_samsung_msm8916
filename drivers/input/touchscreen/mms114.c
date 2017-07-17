@@ -517,7 +517,7 @@ static int mms114_probe(struct i2c_client *client,
 		return error;
 	}
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
+	touch_disabler_set_ts_dev(input_dev);
 #endif
 	return 0;
 }

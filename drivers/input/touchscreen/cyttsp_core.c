@@ -614,7 +614,7 @@ struct cyttsp *cyttsp_probe(const struct cyttsp_bus_ops *bus_ops,
 	}
 
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
+	touch_disabler_set_ts_dev(input_dev);
 #endif
 	return ts;
 
@@ -634,7 +634,7 @@ EXPORT_SYMBOL_GPL(cyttsp_probe);
 void cyttsp_remove(struct cyttsp *ts)
 {
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = NULL;
+	touch_disabler_set_ts_dev(NULL);
 #endif
 	free_irq(ts->irq, ts);
 	input_unregister_device(ts->input);

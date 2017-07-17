@@ -342,7 +342,7 @@ static int tsc_probe(struct platform_device *pdev)
 		goto error_reg;
 	}
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = ts->input_dev;
+	touch_disabler_set_ts_dev(ts->input_dev);
 #endif
 	return 0;
 
@@ -367,7 +367,7 @@ static int tsc_remove(struct platform_device *pdev)
 {
 	struct tsc_data *ts = platform_get_drvdata(pdev);
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = NULL;
+	touch_disabler_set_ts_dev(NULL);
 #endif
 	input_unregister_device(ts->input_dev);
 	free_irq(ts->tsc_irq, ts);

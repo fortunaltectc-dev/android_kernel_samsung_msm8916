@@ -505,7 +505,7 @@ static void w8001_disconnect(struct serio *serio)
 {
 	struct w8001 *w8001 = serio_get_drvdata(serio);
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = NULL;
+	touch_disabler_set_ts_dev(NULL);
 #endif
 	serio_close(serio);
 
@@ -565,7 +565,7 @@ static int w8001_connect(struct serio *serio, struct serio_driver *drv)
 	if (err)
 		goto fail3;
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
+	touch_disabler_set_ts_dev(input_dev);
 #endif
 	return 0;
 

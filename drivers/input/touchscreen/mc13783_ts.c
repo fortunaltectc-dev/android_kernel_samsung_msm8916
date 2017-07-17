@@ -224,7 +224,7 @@ static int __init mc13783_ts_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, priv);
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = idev;
+	touch_disabler_set_ts_dev(idev);
 #endif
 	return 0;
 
@@ -240,7 +240,7 @@ static int mc13783_ts_remove(struct platform_device *pdev)
 {
 	struct mc13783_ts_priv *priv = platform_get_drvdata(pdev);
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = NULL;
+	touch_disabler_set_ts_dev(NULL);
 #endif
 	platform_set_drvdata(pdev, NULL);
 

@@ -294,7 +294,7 @@ static int w90x900ts_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, w90p910_ts);
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
+	touch_disabler_set_ts_dev(input_dev);
 #endif
 	return 0;
 
@@ -312,7 +312,7 @@ static int w90x900ts_remove(struct platform_device *pdev)
 	struct w90p910_ts *w90p910_ts = platform_get_drvdata(pdev);
 	struct resource *res;
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = NULL;
+	touch_disabler_set_ts_dev(NULL);
 #endif
 	free_irq(w90p910_ts->irq_num, w90p910_ts);
 	del_timer_sync(&w90p910_ts->timer);

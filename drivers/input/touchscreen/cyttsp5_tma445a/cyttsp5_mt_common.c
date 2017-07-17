@@ -962,7 +962,7 @@ int cyttsp5_mt_probe(struct device *dev)
 
 	dev_dbg(dev, "%s:done\n", __func__);
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = md->input;
+	touch_disabler_set_ts_dev(md->input);
 #endif
 	return 0;
 
@@ -992,7 +992,7 @@ int cyttsp5_mt_release(struct device *dev)
 #endif
 
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = NULL;
+	touch_disabler_set_ts_dev(NULL);
 #endif
 
 	if (md->input_device_registered) {

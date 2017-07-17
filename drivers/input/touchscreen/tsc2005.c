@@ -678,7 +678,7 @@ static int tsc2005_probe(struct spi_device *spi)
 
 	irq_set_irq_wake(spi->irq, 1);
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
+	touch_disabler_set_ts_dev(input_dev);
 #endif
 	return 0;
 
@@ -697,7 +697,7 @@ static int tsc2005_remove(struct spi_device *spi)
 {
 	struct tsc2005 *ts = spi_get_drvdata(spi);
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = NULL;
+	touch_disabler_set_ts_dev(NULL);
 #endif
 	sysfs_remove_group(&ts->spi->dev.kobj, &tsc2005_attr_group);
 

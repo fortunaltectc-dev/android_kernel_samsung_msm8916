@@ -1541,7 +1541,7 @@ static int fts_probe(struct i2c_client *client, const struct i2c_device_id *idp)
 #endif /* TSP_INIT_COMPLETE */
 #ifdef USE_OPEN_CLOSE
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = info->input_dev;
+	touch_disabler_set_ts_dev(info->input_dev);
 #endif
 #endif
 	return 0;
@@ -1589,7 +1589,7 @@ static int fts_remove(struct i2c_client *client)
 	struct fts_ts_info *info = i2c_get_clientdata(client);
 #ifdef USE_OPEN_CLOSE
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = NULL;
+	touch_disabler_set_ts_dev(NULL);
 #endif
 #endif
 	tsp_debug_info(true, &info->client->dev, "FTS removed \n");

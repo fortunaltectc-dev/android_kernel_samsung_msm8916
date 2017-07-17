@@ -1745,7 +1745,7 @@ static int ist30xx_probe(struct i2c_client *client,
 	ist30xx_dbg_level = prev_dbg_level;
 #if defined(USE_OPEN_CLOSE)
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
+	touch_disabler_set_ts_dev(input_dev);
 #endif
 
 #endif
@@ -1780,7 +1780,7 @@ static int ist30xx_remove(struct i2c_client *client)
 {
 	struct ist30xx_data *data = i2c_get_clientdata(client);
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = NULL;
+	touch_disabler_set_ts_dev(NULL);
 #endif
 	ist30xx_disable_irq(data);
 	free_irq(client->irq, data);

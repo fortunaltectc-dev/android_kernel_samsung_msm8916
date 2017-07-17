@@ -308,7 +308,7 @@ static int da9052_ts_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, tsi);
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
+	touch_disabler_set_ts_dev(input_dev);
 #endif
 	return 0;
 
@@ -327,7 +327,7 @@ static int  da9052_ts_remove(struct platform_device *pdev)
 {
 	struct da9052_tsi *tsi = platform_get_drvdata(pdev);
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = NULL;
+	touch_disabler_set_ts_dev(NULL);
 #endif
 	da9052_reg_write(tsi->da9052, DA9052_LDO9_REG, 0x19);
 

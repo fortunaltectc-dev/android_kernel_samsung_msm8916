@@ -374,7 +374,7 @@ static int stmpe_input_probe(struct platform_device *pdev)
 		return error;
 	}
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = idev;
+	touch_disabler_set_ts_dev(idev);
 #endif
 	return 0;
 }
@@ -383,7 +383,7 @@ static int stmpe_ts_remove(struct platform_device *pdev)
 {
 	struct stmpe_touch *ts = platform_get_drvdata(pdev);
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = NULL;
+	touch_disabler_set_ts_dev(NULL);
 #endif
 	stmpe_disable(ts->stmpe, STMPE_BLOCK_TOUCHSCREEN);
 

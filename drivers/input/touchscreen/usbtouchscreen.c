@@ -1700,7 +1700,7 @@ static int usbtouch_probe(struct usb_interface *intf,
 		}
 	}
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
+	touch_disabler_set_ts_dev(input_dev);
 #endif
 	return 0;
 
@@ -1730,7 +1730,7 @@ static void usbtouch_disconnect(struct usb_interface *intf)
 	dev_dbg(&intf->dev,
 		"%s - usbtouch is initialized, cleaning up\n", __func__);
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = NULL;
+	touch_disabler_set_ts_dev(NULL);
 #endif
 	usb_set_intfdata(intf, NULL);
 	/* this will stop IO via close */

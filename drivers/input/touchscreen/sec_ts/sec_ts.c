@@ -1834,7 +1834,7 @@ static int sec_ts_probe(struct i2c_client *client, const struct i2c_device_id *i
 	sec_ts_fn_init(ts);
 #ifdef USE_OPEN_CLOSE
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = ts->input_dev;
+	touch_disabler_set_ts_dev(ts->input_dev);
 #endif
 #endif
 	return 0;
@@ -1962,7 +1962,7 @@ static int sec_ts_remove(struct i2c_client *client)
 	struct sec_ts_data *ts = i2c_get_clientdata(client);
 #ifdef USE_OPEN_CLOSE
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = NULL;
+	touch_disabler_set_ts_dev(NULL);
 #endif
 #endif
 	tsp_debug_info(true, &ts->client->dev, "%s\n", __func__);

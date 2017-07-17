@@ -343,7 +343,7 @@ int cyttsp5_btn_probe(struct device *dev)
 #endif
 
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.tk_dev = bd->input;
+	touch_disabler_set_tk_dev(bd->input);
 #endif
 	return 0;
 

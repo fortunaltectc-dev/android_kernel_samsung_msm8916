@@ -5317,7 +5317,7 @@ static int zt7548_ts_probe(struct i2c_client *client, const struct i2c_device_id
 	dev_info(&client->dev, "zinitix touch probe done.\n");
 
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = info->input_dev;
+	touch_disabler_set_ts_dev(info->input_dev);
 #endif
 	return 0;
 
@@ -5379,7 +5379,7 @@ static int zt7548_ts_remove(struct i2c_client *client)
 #endif
 
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = NULL;
+	touch_disabler_set_ts_dev(NULL);
 #endif
 
 	disable_irq(info->irq);

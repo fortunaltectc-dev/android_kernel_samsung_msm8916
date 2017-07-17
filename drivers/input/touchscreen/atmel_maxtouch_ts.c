@@ -2188,7 +2188,7 @@ static int mxt_acquire_irq(struct mxt_data *data)
 static void mxt_free_input_device(struct mxt_data *data)
 {
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = NULL;
+	touch_disabler_set_ts_dev(NULL);
 #endif
 	if (data->input_dev) {
 		input_unregister_device(data->input_dev);
@@ -2933,7 +2933,7 @@ static int mxt_create_input_dev(struct mxt_data *data)
 	data->input_dev = input_dev;
 
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
+	touch_disabler_set_ts_dev(input_dev);
 #endif
 	return 0;
 

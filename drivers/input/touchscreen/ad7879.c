@@ -628,7 +628,7 @@ struct ad7879 *ad7879_probe(struct device *dev, u8 devid, unsigned int irq,
 		goto err_remove_gpio;
 
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
+	touch_disabler_set_ts_dev(input_dev);
 #endif
 	return ts;
 
@@ -649,7 +649,7 @@ EXPORT_SYMBOL(ad7879_probe);
 void ad7879_remove(struct ad7879 *ts)
 {
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = NULL;
+	touch_disabler_set_ts_dev(NULL);
 #endif
 	ad7879_gpio_remove(ts);
 	sysfs_remove_group(&ts->dev->kobj, &ad7879_attr_group);

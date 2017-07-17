@@ -5047,7 +5047,7 @@ static int bt432_ts_probe(struct i2c_client *client,
 #endif
 #ifdef USE_OPEN_CLOSE
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = input_dev;
+	touch_disabler_set_ts_dev(input_dev);
 #endif
 #endif
 	return 0;
@@ -5086,7 +5086,7 @@ static int bt432_ts_remove(struct i2c_client *client)
 	struct bt432_ts_dt_data *pdata = info->pdata;
 #ifdef USE_OPEN_CLOSE
 #if defined(CONFIG_TOUCH_DISABLER)
-	touch_disabler_data.ts_dev = NULL;
+	touch_disabler_set_ts_dev(NULL);
 #endif
 #endif
 	disable_irq(info->irq);

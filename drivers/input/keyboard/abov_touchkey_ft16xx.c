@@ -41,6 +41,10 @@
 #include <linux/input/input_booster.h>
 #endif
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 #define ABOV_TK_NAME "abov-ft1604"
 
 /* registers */
@@ -1568,6 +1572,10 @@ static int abov_tk_probe(struct i2c_client *client,
 	input_dev->dev.parent = &client->dev;
 	input_dev->open = abov_tk_input_open;
 	input_dev->close = abov_tk_input_close;
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.tk_dev = input_dev;
+#endif
 
 	set_bit(EV_KEY, input_dev->evbit);
 	set_bit(KEY_RECENT, input_dev->keybit);

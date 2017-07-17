@@ -38,6 +38,9 @@
 #include <linux/uaccess.h>
 #include <linux/regulator/consumer.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
 
 #ifdef CONFIG_SEC_E7_PROJECT
 #define TC300K_FW_NAME "tc360_e7"
@@ -2312,6 +2315,11 @@ static int tc300k_probe(struct i2c_client *client,
 #ifdef USE_OPEN_CLOSE
 	input_dev->open = tc300k_input_open;
 	input_dev->close = tc300k_input_close;
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.tk_dev = input_dev;
+#endif
+
 #endif
 	
 #ifdef USE_TKEY_UPDATE_WORK

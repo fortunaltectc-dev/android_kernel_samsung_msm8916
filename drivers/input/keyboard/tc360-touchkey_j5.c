@@ -38,6 +38,10 @@
 #include <linux/uaccess.h>
 #include <linux/regulator/consumer.h>
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 
 #define TC300K_FW_NAME "tc360_j5"
 
@@ -2526,6 +2530,11 @@ static void tc300k_destroy_interface(struct tc300k_data *data)
 #ifdef USE_OPEN_CLOSE
 	input_dev->open = tc300k_input_open;
 	input_dev->close = tc300k_input_close;
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.tk_dev = input_dev;
+#endif
+
 #endif
 #ifdef USE_TKEY_UPDATE_WORK
 	data->fw_up_running = false;	

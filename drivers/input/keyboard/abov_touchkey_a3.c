@@ -38,6 +38,10 @@
 #include <linux/of_gpio.h>
 #endif
 
+#if defined(CONFIG_TOUCH_DISABLER)
+#include <linux/input/touch_disabler.h>
+#endif
+
 /* registers */
 #define ABOV_BTNSTATUS		0x00
 #define ABOV_FW_VER		0x01
@@ -1488,12 +1492,17 @@ static int abov_tk_probe(struct i2c_client *client,
 
 	snprintf(info->phys, sizeof(info->phys),
 		 "%s/input0", dev_name(&client->dev));
+
 	input_dev->name = "sec_touchkey";
 	input_dev->phys = info->phys;
 	input_dev->id.bustype = BUS_HOST;
 	input_dev->dev.parent = &client->dev;
 	input_dev->open = abov_tk_input_open;
 	input_dev->close = abov_tk_input_close;
+
+#if defined(CONFIG_TOUCH_DISABLER)
+	touch_disabler_data.tk_dev = input_dev;
+#endif
 
 	set_bit(EV_KEY, input_dev->evbit);
 	set_bit(KEY_RECENT, input_dev->keybit);

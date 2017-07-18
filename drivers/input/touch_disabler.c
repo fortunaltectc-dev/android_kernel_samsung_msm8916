@@ -1,5 +1,9 @@
 /*
- * Copyright (c) 2017 The Lineage Project, Samsung MSM8916 Team
+ * Copyright (c) 2017 The Lineage Project,
+ *                    Vincent Zvikaramba <zvikovincent@gmail.com>,
+ *                    Vladimir Bely <vlwwwwww@gmail.com>,
+ *                    Emery Tang <emerytang@gmail.com>,
+ *                    Sean Hoyt <deadman96385@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and

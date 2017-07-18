@@ -22,10 +22,8 @@
 #define MODE_MANUAL "manual"
 
 typedef struct touch_disabler_data {
-	struct device *dev;
 	struct input_dev *ts_dev;
 	struct input_dev *tk_dev;
-	struct class *disabler_class;
 	struct kobject *disabler_kobject;
 	int enabled; /* enable (1) or disable (0) touch devices */
 	int mode;    /* driver mode, between auto (0) and manual (1) */

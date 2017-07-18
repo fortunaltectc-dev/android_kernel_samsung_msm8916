@@ -228,7 +228,6 @@ static int touch_disabler_init_sysfs(void)
 		goto err_alloc_data;
 	}
 
-	data->dev = NULL; // set to NULL for now
 	data->enabled = 0;
 	data->mode = 0;
 	data->ts_dev = NULL;

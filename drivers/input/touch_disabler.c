@@ -34,7 +34,10 @@ static void _touch_disabler_set_touch_mode(bool status);
 static ssize_t touch_disabler_get_enabled(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
 {
-	return sprintf(buf, "%d\n", g_data->enabled);
+	if (g_data->enabled) {
+		return sprintf(buf, "%s\n", "true");
+	}
+	return sprintf(buf, "%s\n", "false");
 }
 
 static ssize_t touch_disabler_set_enabled(struct kobject *kobj,
@@ -43,9 +46,14 @@ static ssize_t touch_disabler_set_enabled(struct kobject *kobj,
 {
 	/* only set the variable if mode is set to manual */
 	if (g_data->mode) {
-		if (!strncmp(buf, "0", 1) || !strncmp(buf, "1", 1)) {
-			sscanf(buf, "%du", &g_data->enabled);
-			_touch_disabler_set_touch_mode(g_data->enabled);
+		if (!strncmp(buf, "true", 4) || !strncmp(buf, "1", 1)) {
+			pr_info("%s: touch devices are enabled.\n", __func__);
+			_touch_disabler_set_touch_mode(true);
+			return count;
+		}
+		else if (!strncmp(buf, "false", 5) || !strncmp(buf, "0", 1)) {
+			pr_info("%s: touch devices are disabled.\n", __func__);
+			_touch_disabler_set_touch_mode(false);
 			return count;
 		} else {
 			pr_err("%s: Invalid input passed\n", __func__);

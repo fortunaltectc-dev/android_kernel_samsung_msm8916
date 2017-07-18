@@ -21,7 +21,7 @@
 #define MODE_AUTO "auto"
 #define MODE_MANUAL "manual"
 
-typedef struct {
+typedef struct touch_disabler_data {
 	struct device *dev;
 	struct input_dev *ts_dev;
 	struct input_dev *tk_dev;

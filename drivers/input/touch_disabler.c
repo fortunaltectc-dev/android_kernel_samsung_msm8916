@@ -32,6 +32,12 @@ static struct touch_disabler_data *g_data;
 static void _touch_disabler_set_touch_status(bool status);
 
 
+/*
+ * Sets the value of g_data->ts_dev to ts_dev.
+ *
+ * This function is intended to be called within a touch screen driver.
+ *
+ */
 void touch_disabler_set_ts_dev(struct input_dev *ts_dev)
 {
 	if (g_data) {
@@ -39,6 +45,12 @@ void touch_disabler_set_ts_dev(struct input_dev *ts_dev)
 	}
 }
 
+/*
+ * Sets the value of g_data->tk_dev to tk_dev.
+ *
+ * This function is intended to be called within a touch key driver.
+ *
+ */
 void touch_disabler_set_tk_dev(struct input_dev *tk_dev)
 {
 	if (g_data) {
@@ -46,7 +58,12 @@ void touch_disabler_set_tk_dev(struct input_dev *tk_dev)
 	}
 }
 
-
+/*
+ * Prints the string equivalent of the value of g_data->enabled to buf.
+ *
+ * Returns the number of bytes printed to buf.
+ *
+ */
 static ssize_t touch_disabler_get_enabled(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
 {
@@ -56,6 +73,13 @@ static ssize_t touch_disabler_get_enabled(struct kobject *kobj,
 	return sprintf(buf, "%s\n", "false");
 }
 
+/*
+ * Sets g_data->enabled to the status passed in buf.
+ *
+ * Returns the number of bytes read from buf, or -EINVAL if
+ * invalid input is passed.
+ *
+ */
 static ssize_t touch_disabler_set_enabled(struct kobject *kobj,
 		struct kobj_attribute *attr, const char *buf,
 		size_t count)
@@ -84,7 +108,12 @@ static ssize_t touch_disabler_set_enabled(struct kobject *kobj,
 static struct kobj_attribute enabled_attribute =__ATTR(enabled, 0660, touch_disabler_get_enabled,
 						   touch_disabler_set_enabled);
 
-
+/*
+ * Prints the string equivalent of the value of g_data->mode to buf.
+ *
+ * Returns the number of bytes printed to buf.
+ *
+ */
 static ssize_t touch_disabler_get_mode(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
 {
@@ -94,6 +123,13 @@ static ssize_t touch_disabler_get_mode(struct kobject *kobj,
 	return sprintf(buf, "%s\n", MODE_AUTO);
 }
 
+/*
+ * Sets g_data->mode to the mode passed in buf.
+ *
+ * Returns the number of bytes read from buf, or -EINVAL if
+ * invalid input is passed.
+ *
+ */
 static ssize_t touch_disabler_set_mode(struct kobject *kobj,
 		struct kobj_attribute *attr, const char *buf,
 		size_t count)
@@ -119,10 +155,10 @@ static struct kobj_attribute mode_attribute =__ATTR(mode, 0660, touch_disabler_g
 
 
 /*
- * Touch key/panel enabler/disabler for samsung touch keys/panel drivers.
+ * Enables or disables the touch key/panel depending on value of status.
  *
- * This function is called by mdss_fb for primary panel.
- * When panel blank or unblank, touch devices will enabled or disabled.
+ * This function is called by mdss_dsi_post_panel_on/mdss_dsi_panel_off.
+ * When the panel blanks or unblanks, touch devices will enabled or disabled.
  *
  */
 void touch_disabler_set_touch_status(bool status)
@@ -133,6 +169,12 @@ void touch_disabler_set_touch_status(bool status)
 	}
 }
 
+/*
+ * Enables or disables the touch key/panel depending on value of status.
+ *
+ * This function is called internally.
+ *
+ */
 static void _touch_disabler_set_touch_status(bool status)
 {
 	/* set the enabled variable */
@@ -170,6 +212,10 @@ static void _touch_disabler_set_touch_status(bool status)
 	}
 }
 
+/*
+ * Initialises sysfs interfaces specified (enabled and mode).
+ *
+ */
 static int touch_disabler_init_sysfs(void)
 {
 	struct touch_disabler_data *data;
@@ -224,6 +270,10 @@ err_alloc_data:
 	return ret;
 }
 
+/*
+ * Releases the sysfs structures initialised above.
+ *
+ */
 static void touch_disabler_free_sysfs(void)
 {
 	struct touch_disabler_data *data = g_data;
@@ -233,6 +283,10 @@ static void touch_disabler_free_sysfs(void)
 	g_data = NULL;
 }
 
+/*
+ * Releases any resources allocatd by the driver.
+ *
+ */
 static int touch_disabler_remove(void)
 {
 	touch_disabler_free_sysfs();

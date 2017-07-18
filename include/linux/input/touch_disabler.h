@@ -32,7 +32,7 @@ typedef struct touch_disabler_data {
 } touch_disabler_data_t;
 
 void touch_disabler_set_tk_dev(struct input_dev *ts_dev);
-void touch_disabler_set_touch_mode(bool status);
+void touch_disabler_set_touch_status(bool status);
 void touch_disabler_set_ts_dev(struct input_dev *ts_dev);
 
 #endif /* TOUCH_DISABLER_H */

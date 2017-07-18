@@ -29,7 +29,7 @@
 
 static struct touch_disabler_data *g_data;
 
-static void _touch_disabler_set_touch_mode(bool status);
+static void _touch_disabler_set_touch_status(bool status);
 
 static ssize_t touch_disabler_get_enabled(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
@@ -48,12 +48,12 @@ static ssize_t touch_disabler_set_enabled(struct kobject *kobj,
 	if (g_data->mode) {
 		if (!strncmp(buf, "true", 4) || !strncmp(buf, "1", 1)) {
 			pr_info("%s: touch devices are enabled.\n", __func__);
-			_touch_disabler_set_touch_mode(true);
+			_touch_disabler_set_touch_status(true);
 			return count;
 		}
 		else if (!strncmp(buf, "false", 5) || !strncmp(buf, "0", 1)) {
 			pr_info("%s: touch devices are disabled.\n", __func__);
-			_touch_disabler_set_touch_mode(false);
+			_touch_disabler_set_touch_status(false);
 			return count;
 		} else {
 			pr_err("%s: Invalid input passed\n", __func__);
@@ -107,11 +107,11 @@ static struct kobj_attribute mode_attribute =__ATTR(mode, 0660, touch_disabler_g
  * When panel blank or unblank, touch devices will enabled or disabled.
  *
  */
-void touch_disabler_set_touch_mode(bool status)
+void touch_disabler_set_touch_status(bool status)
 {
 	/* let mdss trigger the enaling/disabling */
 	if (g_data && !g_data->mode) {
-		_touch_disabler_set_touch_mode(status);
+		_touch_disabler_set_touch_status(status);
 	}
 }
 
@@ -129,7 +129,7 @@ void touch_disabler_set_tk_dev(struct input_dev *tk_dev)
 	}
 }
 
-static void _touch_disabler_set_touch_mode(bool status)
+static void _touch_disabler_set_touch_status(bool status)
 {
 	/* set the enabled variable */
 	if (g_data) {

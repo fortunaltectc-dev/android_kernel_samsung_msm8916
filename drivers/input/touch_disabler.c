@@ -31,6 +31,22 @@ static struct touch_disabler_data *g_data;
 
 static void _touch_disabler_set_touch_status(bool status);
 
+
+void touch_disabler_set_ts_dev(struct input_dev *ts_dev)
+{
+	if (g_data) {
+		g_data->ts_dev = ts_dev;
+	}
+}
+
+void touch_disabler_set_tk_dev(struct input_dev *tk_dev)
+{
+	if (g_data) {
+		g_data->tk_dev = tk_dev;
+	}
+}
+
+
 static ssize_t touch_disabler_get_enabled(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
 {
@@ -68,6 +84,7 @@ static ssize_t touch_disabler_set_enabled(struct kobject *kobj,
 static struct kobj_attribute enabled_attribute =__ATTR(enabled, 0660, touch_disabler_get_enabled,
 						   touch_disabler_set_enabled);
 
+
 static ssize_t touch_disabler_get_mode(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
 {
@@ -100,6 +117,7 @@ static ssize_t touch_disabler_set_mode(struct kobject *kobj,
 static struct kobj_attribute mode_attribute =__ATTR(mode, 0660, touch_disabler_get_mode,
 						   touch_disabler_set_mode);
 
+
 /*
  * Touch key/panel enabler/disabler for samsung touch keys/panel drivers.
  *
@@ -112,20 +130,6 @@ void touch_disabler_set_touch_status(bool status)
 	/* let mdss trigger the enaling/disabling */
 	if (g_data && !g_data->mode) {
 		_touch_disabler_set_touch_status(status);
-	}
-}
-
-void touch_disabler_set_ts_dev(struct input_dev *ts_dev)
-{
-	if (g_data) {
-		g_data->ts_dev = ts_dev;
-	}
-}
-
-void touch_disabler_set_tk_dev(struct input_dev *tk_dev)
-{
-	if (g_data) {
-		g_data->tk_dev = tk_dev;
 	}
 }
 

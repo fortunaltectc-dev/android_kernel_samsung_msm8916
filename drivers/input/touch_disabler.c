@@ -29,12 +29,6 @@
 
 static struct kobject *touch_disabler_kobject;
 
-static int enabled; /* enable (1) /disable (0) touch devices */
-static int mode;    /* driver mode, between auto (0) and manual (1) */
-
-#define MODE_AUTO "auto"
-#define MODE_MANUAL "manual"
-
 static touch_disabler_data_t touch_disabler_data;
 
 static void _touch_disabler_set_touch_mode(bool status);
@@ -42,7 +36,7 @@ static void _touch_disabler_set_touch_mode(bool status);
 static ssize_t touch_disabler_get_enabled(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
 {
-	return sprintf(buf, "%d\n", enabled);
+	return sprintf(buf, "%d\n", touch_disabler_data->enabled);
 }
 
 static ssize_t touch_disabler_set_enabled(struct kobject *kobj,
@@ -50,10 +44,10 @@ static ssize_t touch_disabler_set_enabled(struct kobject *kobj,
 		size_t count)
 {
 	/* only set the variable if mode is set to manual */
-	if (mode) {
+	if (touch_disabler_data->mode) {
 		if (!strncmp(buf, "0", 1) || !strncmp(buf, "1", 1)) {
-			sscanf(buf, "%du", &enabled);
-			_touch_disabler_set_touch_mode(enabled);
+			sscanf(buf, "%du", &touch_disabler_data->enabled);
+			_touch_disabler_set_touch_mode(touch_disabler_data->enabled);
 			return count;
 		} else {
 			pr_err("%s: Invalid input passed\n", __func__);
@@ -68,7 +62,7 @@ static ssize_t touch_disabler_set_enabled(struct kobject *kobj,
 static ssize_t touch_disabler_get_mode(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
 {
-	if (mode) {
+	if (touch_disabler_data->mode) {
 		return sprintf(buf, "%s\n", MODE_MANUAL);
 	} else {
 		return sprintf(buf, "%s\n", MODE_AUTO);
@@ -83,14 +77,14 @@ static ssize_t touch_disabler_set_mode(struct kobject *kobj,
 			!strncmp(buf, "1", 1)) {
 		pr_info("%s: manual mode is enabled.\n",
 			__func__);
-		mode = 1;
+		touch_disabler_data->mode = 1;
 		return count;
 	}
 	else if (!strncmp(buf, MODE_AUTO, strlen(MODE_AUTO)) ||
 			!strncmp(buf, "0", 1)) {
 		pr_info("%s: auto mode is enabled.\n",
 			__func__);
-		mode = 0;
+		touch_disabler_data->mode = 0;
 		return count;
 	}
 	pr_err("%s: Invalid input passed\n", __func__);
@@ -113,7 +107,7 @@ static struct kobj_attribute enabled_attribute =__ATTR(enabled, 0660, touch_disa
 void touch_disabler_set_touch_mode(bool status)
 {
 	/* let mdss trigger the enaling/disabling */
-	if (!mode)
+	if (!touch_disabler_data->mode)
 		_touch_disabler_set_touch_mode(status);
 }
 
@@ -121,7 +115,7 @@ static void _touch_disabler_set_touch_mode(bool status)
 {
 
 	/* set the enabled variable */
-	enabled = status;
+	touch_disabler_data->enabled = status;
 
 	/* check if the struct has been initialised by the touch driver */
 	if (touch_disabler_data.ts_dev) {
@@ -167,8 +161,8 @@ static int __init touch_disabler_init(void)
 {
 	int error = 0;
 
-	enabled = 0;
-	mode = 0;
+	touch_disabler_data->enabled = 0;
+	touch_disabler_data->mode = 0;
 
 	touch_disabler_data.ts_dev = NULL;
 	touch_disabler_data.tk_dev = NULL;

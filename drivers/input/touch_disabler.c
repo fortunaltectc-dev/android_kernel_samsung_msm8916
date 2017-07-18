@@ -64,9 +64,8 @@ static ssize_t touch_disabler_get_mode(struct kobject *kobj,
 {
 	if (touch_disabler_data.mode) {
 		return sprintf(buf, "%s\n", MODE_MANUAL);
-	} else {
-		return sprintf(buf, "%s\n", MODE_AUTO);
 	}
+	return sprintf(buf, "%s\n", MODE_AUTO);
 }
 
 static ssize_t touch_disabler_set_mode(struct kobject *kobj,

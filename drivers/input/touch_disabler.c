@@ -16,12 +16,8 @@
 #include <linux/of.h>
 #include <linux/slab.h>
 
-#include <linux/printk.h>
 #include <linux/kobject.h>
 #include <linux/sysfs.h>
-#include <linux/init.h>
-#include <linux/fs.h>
-#include <linux/string.h>
 
 #include <linux/input.h>
 

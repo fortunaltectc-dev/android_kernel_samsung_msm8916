@@ -305,6 +305,6 @@ static void __exit touch_disabler_exit (void)
 module_init(touch_disabler_init);
 module_exit(touch_disabler_exit);
 
-MODULE_DESCRIPTION("Touch key/panel disabler for Samsung devices");
+MODULE_DESCRIPTION("Touch key/panel disabler");
 MODULE_AUTHOR("Vladimir Bely <vlwwwwww@gmail.com>, Vincent Zvikaramba <zvikovincent@gmail.com>");
 MODULE_LICENSE("GPL");

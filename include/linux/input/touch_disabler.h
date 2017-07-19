@@ -24,9 +24,9 @@
 #define CONTROL_MANUAL "manual"
 
 typedef struct touch_disabler_data {
+	struct class *disabler_class;
 	struct input_dev *ts_dev;
 	struct input_dev *tk_dev;
-	struct class *disabler_class;
 	int enabled; /* enable (1) or disable (0) touch devices */
 	int control;    /* driver control, between auto (0) and manual (1) */
 } touch_disabler_data_t;

@@ -98,8 +98,7 @@ static ssize_t touch_disabler_set_enabled(struct class *dev,
 			return -EINVAL;
 		}
 	}
-	pr_warn("%s: Input ignored since auto control is enabled.\n",
-			__func__);
+	pr_warn("%s: Input ignored since auto control is enabled.\n", __func__);
 	return -EINVAL;
 }
 

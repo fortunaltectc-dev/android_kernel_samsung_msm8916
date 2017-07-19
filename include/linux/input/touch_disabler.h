@@ -18,15 +18,15 @@
 #ifndef TOUCH_DISABLER_H
 #define TOUCH_DISABLER_H
 
+#define TOUCH_DISABLER_NAME "touch_disabler"
+
 #define CONTROL_AUTO "auto"
 #define CONTROL_MANUAL "manual"
 
 typedef struct touch_disabler_data {
-	struct device *dev;
 	struct input_dev *ts_dev;
 	struct input_dev *tk_dev;
 	struct class *disabler_class;
-	struct kobject *disabler_kobject;
 	int enabled; /* enable (1) or disable (0) touch devices */
 	int control;    /* driver control, between auto (0) and manual (1) */
 } touch_disabler_data_t;

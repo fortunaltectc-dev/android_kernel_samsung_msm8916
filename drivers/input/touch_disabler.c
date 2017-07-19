@@ -108,6 +108,39 @@ static ssize_t touch_disabler_set_enabled(struct kobject *kobj,
 static struct kobj_attribute enabled_attribute =__ATTR(enabled, 0660, touch_disabler_get_enabled,
 						   touch_disabler_set_enabled);
 
+static ssize_t class_touch_disabler_get_enabled(struct class *dev,
+		struct class_attribute *attr, char *buf)
+{
+	if (g_data->enabled) {
+		return sprintf(buf, "%s\n", "true");
+	}
+	return sprintf(buf, "%s\n", "false");
+}
+
+static ssize_t class_touch_disabler_set_enabled(struct class *dev,
+		struct class_attribute *attr, const char *buf, size_t count)
+{
+	/* only set the variable if control is set to manual */
+	if (g_data->control) {
+		if (!strncmp(buf, "true", 4) || !strncmp(buf, "1", 1)) {
+			pr_info("%s: touch devices are enabled.\n", __func__);
+			_touch_disabler_set_touch_status(true);
+			return count;
+		}
+		else if (!strncmp(buf, "false", 5) || !strncmp(buf, "0", 1)) {
+			pr_info("%s: touch devices are disabled.\n", __func__);
+			_touch_disabler_set_touch_status(false);
+			return count;
+		} else {
+			pr_err("%s: Invalid input passed\n", __func__);
+			return -EINVAL;
+		}
+	}
+	pr_warn("%s: Input ignored since auto control is enabled.\n",
+			__func__);
+	return -EINVAL;
+}
+
 /*
  * Prints the string equivalent of the value of g_data->control to buf.
  *
@@ -152,6 +185,35 @@ static ssize_t touch_disabler_set_control(struct kobject *kobj,
 
 static struct kobj_attribute control_attribute =__ATTR(control, 0660, touch_disabler_get_control,
 						   touch_disabler_set_control);
+
+static ssize_t class_touch_disabler_get_control(struct class *dev,
+		struct class_attribute *attr, char *buf)
+{
+	if (g_data->control) {
+		return sprintf(buf, "%s\n", CONTROL_MANUAL);
+	}
+	return sprintf(buf, "%s\n", CONTROL_AUTO);
+}
+
+
+static ssize_t class_touch_disabler_set_control(struct class *dev,
+		struct class_attribute *attr, const char *buf, size_t count)
+{
+	if (!strncmp(buf, CONTROL_MANUAL, strlen(CONTROL_MANUAL)) ||
+			!strncmp(buf, "1", 1)) {
+		pr_info("%s: manual control is enabled.\n", __func__);
+		g_data->control = 1;
+		return count;
+	}
+	else if (!strncmp(buf, CONTROL_AUTO, strlen(CONTROL_AUTO)) ||
+			!strncmp(buf, "0", 1)) {
+		pr_info("%s: auto control is enabled.\n", __func__);
+		g_data->control = 0;
+		return count;
+	}
+	pr_err("%s: Invalid input passed\n", __func__);
+	return -EINVAL;
+}
 
 
 /*
@@ -212,6 +274,19 @@ static void _touch_disabler_set_touch_status(bool status)
 	}
 }
 
+static struct class_attribute pwm_class_attrs[] = {
+	__ATTR(control, 0660, class_touch_disabler_get_control, class_touch_disabler_set_control),
+	__ATTR(enabled, 0660, class_touch_disabler_get_enabled, class_touch_disabler_set_enabled),
+	__ATTR_NULL
+};
+
+static struct class pwm_class =
+{
+	.name = "touch_disabler",
+	.owner = THIS_MODULE,
+	.class_attrs = pwm_class_attrs
+};
+
 /*
  * Initialises sysfs interfaces specified (enabled and control).
  *
@@ -227,6 +302,8 @@ static int touch_disabler_init_sysfs(void)
 		ret = -ENOMEM;
 		goto err_alloc_data;
 	}
+
+	class_register(&pwm_class);
 
 	data->dev = NULL; // set to NULL for now
 	data->enabled = 0;

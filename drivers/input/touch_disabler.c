@@ -84,8 +84,8 @@ static ssize_t touch_disabler_set_enabled(struct kobject *kobj,
 		struct kobj_attribute *attr, const char *buf,
 		size_t count)
 {
-	/* only set the variable if mode is set to manual */
-	if (g_data->mode) {
+	/* only set the variable if control is set to manual */
+	if (g_data->control) {
 		if (!strncmp(buf, "true", 4) || !strncmp(buf, "1", 1)) {
 			pr_info("%s: touch devices are enabled.\n", __func__);
 			_touch_disabler_set_touch_status(true);
@@ -100,7 +100,7 @@ static ssize_t touch_disabler_set_enabled(struct kobject *kobj,
 			return -EINVAL;
 		}
 	}
-	pr_warn("%s: Input ignored since auto mode is enabled.\n",
+	pr_warn("%s: Input ignored since auto control is enabled.\n",
 			__func__);
 	return -EINVAL;
 }
@@ -109,49 +109,49 @@ static struct kobj_attribute enabled_attribute =__ATTR(enabled, 0660, touch_disa
 						   touch_disabler_set_enabled);
 
 /*
- * Prints the string equivalent of the value of g_data->mode to buf.
+ * Prints the string equivalent of the value of g_data->control to buf.
  *
  * Returns the number of bytes printed to buf.
  *
  */
-static ssize_t touch_disabler_get_mode(struct kobject *kobj,
+static ssize_t touch_disabler_get_control(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
 {
-	if (g_data->mode) {
-		return sprintf(buf, "%s\n", MODE_MANUAL);
+	if (g_data->control) {
+		return sprintf(buf, "%s\n", CONTROL_MANUAL);
 	}
-	return sprintf(buf, "%s\n", MODE_AUTO);
+	return sprintf(buf, "%s\n", CONTROL_AUTO);
 }
 
 /*
- * Sets g_data->mode to the mode passed in buf.
+ * Sets g_data->control to the control passed in buf.
  *
  * Returns the number of bytes read from buf, or -EINVAL if
  * invalid input is passed.
  *
  */
-static ssize_t touch_disabler_set_mode(struct kobject *kobj,
+static ssize_t touch_disabler_set_control(struct kobject *kobj,
 		struct kobj_attribute *attr, const char *buf,
 		size_t count)
 {
-	if (!strncmp(buf, MODE_MANUAL, strlen(MODE_MANUAL)) ||
+	if (!strncmp(buf, CONTROL_MANUAL, strlen(CONTROL_MANUAL)) ||
 			!strncmp(buf, "1", 1)) {
-		pr_info("%s: manual mode is enabled.\n", __func__);
-		g_data->mode = 1;
+		pr_info("%s: manual control is enabled.\n", __func__);
+		g_data->control = 1;
 		return count;
 	}
-	else if (!strncmp(buf, MODE_AUTO, strlen(MODE_AUTO)) ||
+	else if (!strncmp(buf, CONTROL_AUTO, strlen(CONTROL_AUTO)) ||
 			!strncmp(buf, "0", 1)) {
-		pr_info("%s: auto mode is enabled.\n", __func__);
-		g_data->mode = 0;
+		pr_info("%s: auto control is enabled.\n", __func__);
+		g_data->control = 0;
 		return count;
 	}
 	pr_err("%s: Invalid input passed\n", __func__);
 	return -EINVAL;
 }
 
-static struct kobj_attribute mode_attribute =__ATTR(mode, 0660, touch_disabler_get_mode,
-						   touch_disabler_set_mode);
+static struct kobj_attribute control_attribute =__ATTR(control, 0660, touch_disabler_get_control,
+						   touch_disabler_set_control);
 
 
 /*
@@ -164,7 +164,7 @@ static struct kobj_attribute mode_attribute =__ATTR(mode, 0660, touch_disabler_g
 void touch_disabler_set_touch_status(bool status)
 {
 	/* let mdss trigger the enaling/disabling */
-	if (g_data && !g_data->mode) {
+	if (g_data && !g_data->control) {
 		_touch_disabler_set_touch_status(status);
 	}
 }
@@ -213,7 +213,7 @@ static void _touch_disabler_set_touch_status(bool status)
 }
 
 /*
- * Initialises sysfs interfaces specified (enabled and mode).
+ * Initialises sysfs interfaces specified (enabled and control).
  *
  */
 static int touch_disabler_init_sysfs(void)
@@ -229,7 +229,7 @@ static int touch_disabler_init_sysfs(void)
 	}
 
 	data->enabled = 0;
-	data->mode = 0;
+	data->control = 0;
 	data->ts_dev = NULL;
 	data->tk_dev = NULL;
 	g_data = data;
@@ -249,10 +249,10 @@ static int touch_disabler_init_sysfs(void)
 		goto err_create_enabled;
 	}
 
-	ret = sysfs_create_file(data->disabler_kobject, &mode_attribute.attr);
+	ret = sysfs_create_file(data->disabler_kobject, &control_attribute.attr);
 
 	if (ret) {
-		pr_err("%s: Failed to create mode\n", __func__);
+		pr_err("%s: Failed to create control\n", __func__);
 		goto err_create_enabled;
 	}
 

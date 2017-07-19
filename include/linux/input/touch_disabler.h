@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2017 The Lineage Project,
- *                    Vincent Zvikaramba <zvikovincent@gmail.com>,
- *                    Vladimir Bely <vlwwwwww@gmail.com>,
- *                    Emery Tang <emerytang@gmail.com>,
+ * Copyright (c) 2017 The Lineage Project
+ *                    Vincent Zvikaramba <zvikovincent@gmail.com>
+ *                    Vladimir Bely <vlwwwwww@gmail.com>
+ *                    Emery Tanghanwaye <emerytang@gmail.com>
  *                    Sean Hoyt <deadman96385@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify

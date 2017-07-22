@@ -23,6 +23,12 @@
 #define CONTROL_AUTO "auto"
 #define CONTROL_MANUAL "manual"
 
+enum TOUCH_STATUS {
+	TOUCH_DISABLED = 0,
+	TOUCH_ENABLED = 1,
+	TOUCH_UNAVAILABLE
+};
+
 typedef struct touch_disabler_data {
 	struct class *disabler_class;
 	struct input_dev *ts_dev;

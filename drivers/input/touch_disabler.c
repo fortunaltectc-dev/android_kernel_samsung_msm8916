@@ -67,10 +67,13 @@ void touch_disabler_set_tk_dev(struct input_dev *tk_dev)
 static ssize_t touch_disabler_get_tk_enabled(struct class *dev,
 		struct class_attribute *attr, char *buf)
 {
-	if (g_data->tk_enabled) {
+	if (g_data->tk_enabled == TOUCH_ENABLED) {
 		return sprintf(buf, "%s\n", "true");
 	}
-	return sprintf(buf, "%s\n", "false");
+	else if (g_data->tk_enabled == TOUCH_DISABLED) {
+		return sprintf(buf, "%s\n", "false");
+	}
+	return sprintf(buf, "%s\n", "touch key unavailable");
 }
 
 /*
@@ -115,10 +118,13 @@ static CLASS_ATTR(tk_enabled, S_IRUGO | S_IWUSR, touch_disabler_get_tk_enabled, 
 static ssize_t touch_disabler_get_ts_enabled(struct class *dev,
 		struct class_attribute *attr, char *buf)
 {
-	if (g_data->ts_enabled) {
+	if (g_data->ts_enabled == TOUCH_ENABLED) {
 		return sprintf(buf, "%s\n", "true");
 	}
-	return sprintf(buf, "%s\n", "false");
+	else if (g_data->ts_enabled == TOUCH_DISABLED) {
+		return sprintf(buf, "%s\n", "false");
+	}
+	return sprintf(buf, "%s\n", "touch panel unavailable");
 }
 
 /*
@@ -268,11 +274,6 @@ void touch_disabler_set_touch_status(bool status)
  */
 static void _touch_disabler_set_tk_status(bool status)
 {
-	/* set the tk_enabled variable */
-	if (g_data) {
-		g_data->tk_enabled = status;
-	}
-
 	if (g_data && g_data->tk_dev) {
 		if (status) {
 			pr_info("%s: Enabling %s touch keys...\n", __func__,
@@ -283,8 +284,12 @@ static void _touch_disabler_set_tk_status(bool status)
 					g_data->tk_dev->name);
 			g_data->tk_dev->close(g_data->tk_dev);
 		}
+		/* set the tk_enabled variable */
+		g_data->tk_enabled = status;
 	} else {
 		pr_warn("%s: Touch key data struct is uninitialised!\n", __func__);
+		g_data->tk_enabled = TOUCH_UNAVAILABLE;
+
 	}
 }
 
@@ -296,11 +301,6 @@ static void _touch_disabler_set_tk_status(bool status)
  */
 static void _touch_disabler_set_ts_status(bool status)
 {
-	/* set the ts_enabled variable */
-	if (g_data) {
-		g_data->ts_enabled = status;
-	}
-
 	/* check if the struct has been initialised by the touch driver */
 	if (g_data && g_data->ts_dev) {
 		if (status) {
@@ -311,9 +311,12 @@ static void _touch_disabler_set_ts_status(bool status)
 			pr_info("%s: Disabling %s touch panel...\n", __func__,
 					g_data->ts_dev->name);
 			g_data->ts_dev->close(g_data->ts_dev);
+		/* set the ts_enabled variable */
+		g_data->ts_enabled = status;
 		}
 	} else {
 		pr_warn("%s: Touch panel data struct is uninitialised!\n", __func__);
+		g_data->ts_enabled = TOUCH_UNAVAILABLE;
 	}
 }
 
